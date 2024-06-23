@@ -1,51 +1,88 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import { invoke } from "@tauri-apps/api/tauri";
-import "./App.css";
+import React, { useState, useEffect, ChangeEvent } from 'react';
+import { invoke } from '@tauri-apps/api/tauri';
+
+// Define an interface for the user
+interface User {
+  id: string;
+  name: string;
+}
 
 function App() {
-  const [greetMsg, setGreetMsg] = useState("");
-  const [name, setName] = useState("");
+  // Initialize the database
+  useEffect(() => {
+    invoke('initialize_db')
+      .then((message) => console.log(message))
+      .catch((error) => console.error(error));
+    fetchUsers(); // Fetch users when the component mounts
+  }, []);
 
-  async function greet() {
-    // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
-    setGreetMsg(await invoke("greet", { name }));
-  }
+  // State to hold users
+  const [users, setUsers] = useState<User[]>([]);
+  const [currentUser, setCurrentUser] = useState<User>({ id: '', name: '' });
+
+  // Function to add a user
+  const addUser = async (name: string) => {
+    try {
+      const message = await invoke('add_user', { name });
+      console.log("addUser", message);
+      fetchUsers(); // Refresh users after adding
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  // Function to fetch all users
+  const fetchUsers = async () => {
+    try {
+      const fetchedUsers = await invoke('get_users');
+      console.log("fetchedUsers", fetchedUsers);
+      const usersArray = fetchedUsers as User[]; // Assuming fetchedUsers is directly an array of User objects
+      console.log("Parsed Users", usersArray); // Debugging: Verify the structure
+      setUsers(usersArray);
+
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  // Handle input change
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setCurrentUser(prevUser => ({
+      ...prevUser,
+      [name]: value
+    }));
+  };
+
+  // Handle form submit
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    await addUser(currentUser.name);
+    setCurrentUser({ id: '', name: '' }); // Reset form
+  };
 
   return (
-    <div className="container">
-      <h1>Welcome to Tauri!</h1>
-
-      <div className="row">
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo vite" alt="Vite logo" />
-        </a>
-        <a href="https://tauri.app" target="_blank">
-          <img src="/tauri.svg" className="logo tauri" alt="Tauri logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div style={{ display: 'flex' }}>
+      <div style={{ flex: 1 }}>
+        <h2>Users</h2>
+        <ul>
+        {users.map((user) => (
+          <li key={user.id}>{user.name}</li> // Add a unique "key" prop here
+        ))}
+      </ul>
       </div>
-
-      <p>Click on the Tauri, Vite, and React logos to learn more.</p>
-
-      <form
-        className="row"
-        onSubmit={(e) => {
-          e.preventDefault();
-          greet();
-        }}
-      >
-        <input
-          id="greet-input"
-          onChange={(e) => setName(e.currentTarget.value)}
-          placeholder="Enter a name..."
-        />
-        <button type="submit">Greet</button>
-      </form>
-
-      <p>{greetMsg}</p>
+      <div style={{ flex: 1 }}>
+        <h2>Add a User</h2>
+        <form onSubmit={handleSubmit}>
+          <input
+            name="name"
+            value={currentUser.name}
+            onChange={handleInputChange}
+            placeholder="Name"
+          />
+          <button type="submit">Add User</button>
+        </form>
+      </div>
     </div>
   );
 }
