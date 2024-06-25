@@ -31,6 +31,17 @@ function App() {
     }
   };
 
+  // Function to remove a user
+  const removeUser = async (id: string) => {
+    try {
+      const message = await invoke('remove_user', { id });
+      console.log("removeUser", message);
+      fetchUsers(); // Refresh users after removing
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   // Function to fetch all users
   const fetchUsers = async () => {
     try {
@@ -67,7 +78,10 @@ function App() {
         <h2>Users</h2>
         <ul>
         {users.map((user) => (
-          <li key={user.id}>{user.name}</li> // Add a unique "key" prop here
+          <li key={user.id}>
+            {user.name}
+            <button onClick={() => removeUser(user.id)} style={{ marginLeft: '10px' }}>Remove</button>
+          </li>
         ))}
       </ul>
       </div>

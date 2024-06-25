@@ -37,6 +37,17 @@ pub fn add_user(name: String) -> Result<String, String> {
 }
 
 #[command]
+pub fn remove_user(id: i64) -> Result<String, String> {
+    let connection = Connection::open("app.db").map_err(|e| e.to_string())?;
+    let mut statement = connection
+        .prepare("DELETE FROM users WHERE id = ?")
+        .map_err(|e| e.to_string())?;
+    statement.bind(1, id).map_err(|e| e.to_string())?;
+    statement.next().map_err(|e| e.to_string())?;
+    Ok("User removed successfully".to_string())
+}
+
+#[command]
 pub fn get_users() -> Result<Vec<User>, String> {
     let connection = Connection::open("app.db").map_err(|e| e.to_string())?;
     let mut statement = connection
@@ -51,3 +62,4 @@ pub fn get_users() -> Result<Vec<User>, String> {
     }
     Ok(users)
 }
+

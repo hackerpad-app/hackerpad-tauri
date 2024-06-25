@@ -5,7 +5,8 @@ fn main() {
         .invoke_handler(tauri::generate_handler![
             database::initialize_db,
             database::add_user,
-            database::get_users
+            database::get_users,
+            database::remove_user
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
