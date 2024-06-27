@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 .logo.vite:hover {
   filter: drop-shadow(0 0 2em #747bff);
 }
@@ -113,4 +117,33 @@ button {
   button:active {
     background-color: #0f0f0f69;
   }
+}
+
+.main-container{
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  background-color: #27c32c;
+}
+
+.sidebar {
+  width: 20%; /* Sidebar takes up 20% of the container's width */
+  height: 100vh; /* Full height of the viewport */
+  background-color: #2e0f0f; /* Dark background color */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid #2e0c0c;
+}
+
+.display {
+  width: 80%; /* Display area takes up the remaining 80% of the container's width */
+  height: 100vh; /* Full height of the viewport */
+  background-color: #5e3737; /* Different background color for contrast */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid #aa4747;
 }
