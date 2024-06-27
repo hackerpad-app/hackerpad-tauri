@@ -5,6 +5,8 @@ import "./App.css";
 
 interface Note {
   id: string;
+  created_at: string;
+  updated_at: string;
   headline: string;
   content: string;
 }
@@ -17,6 +19,8 @@ function App() {
   const [notes, setNotes] = useState<Note[]>([]);
   const [currentNote, setCurrentNote] = useState<Note>({
     id: "",
+    created_at: "20.08.1998",
+    updated_at: "20.08.2024",
     headline: "default-headline",
     content: "default-content",
   });
@@ -31,6 +35,8 @@ function App() {
   const fetchNotes = async () => {
     try {
       const fetchedNotes = await invoke("get_notes"); // Get notes from the database
+      console.log("fetchedNotes", fetchedNotes);
+
       const notesArray = fetchedNotes as Note[]; // Parse the notes
       // console.log("Parsed notes", notesArray);
 
@@ -42,8 +48,8 @@ function App() {
   };
 
   const handleModalClose = (headline: string, content: string) => {
-    addNote(headline, content); // Save the notes to a database
-    setShowModal(false); // Close the modal
+    addNote(headline, content);
+    setShowModal(false); // Close the Modal
   };
 
   const addNote = async (headline: string, content: string) => {
@@ -122,7 +128,9 @@ function App() {
       <div className="display w-1/2 h-screen flex flex-row bg-[#5e3737] items-center border-2 border-[#aa4747]">
         <div className="flex w-full">
           <div className="w-3/4 h-10 bg-slate-400">{currentNote?.headline}</div>
-          <div className="w-1/4 h-10 bg-slate-500">placeholder-for-date</div>
+          <div className="w-1/4 h-10 bg-slate-500">
+            {currentNote?.created_at}
+          </div>
         </div>
         <div className="w-full h-4/5 bg-black">{currentNote?.content}</div>
       </div>
