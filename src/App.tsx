@@ -3,7 +3,7 @@ import { invoke } from "@tauri-apps/api/tauri";
 import Modal from "./components/Modal.tsx";
 import "./App.css";
 
-interface Note {
+interface note {
   id: string;
   created_at: string;
   updated_at: string;
@@ -16,8 +16,8 @@ function App() {
   // const [currentUser, setCurrentUser] = useState<User>({ id: "", name: "" });
 
   const [showModal, setShowModal] = useState(false);
-  const [notes, setNotes] = useState<Note[]>([]);
-  const [currentNote, setCurrentNote] = useState<Note>({
+  const [notes, setnotes] = useState<note[]>([]);
+  const [currentnote, setcurrentnote] = useState<note>({
     id: "",
     created_at: "20.08.1998",
     updated_at: "20.08.2024",
@@ -29,35 +29,38 @@ function App() {
     invoke("initialize_db")
       .then((message) => console.log(message))
       .catch((error) => console.error(error));
-    fetchNotes(); // Fetch users when the component mounts
+    fetchnotes(); // Fetch users when the component mounts
   }, []);
 
-  const fetchNotes = async () => {
+  const fetchnotes = async () => {
     try {
-      const fetchedNotes = await invoke("get_notes"); // Get notes from the database
-      console.log("fetchedNotes", fetchedNotes);
+      const fetchednotes = await invoke("get_notes"); // Get notes from the database
+      console.log("fetchednotes", fetchednotes);
 
-      const notesArray = fetchedNotes as Note[]; // Parse the notes
-      // console.log("Parsed notes", notesArray);
-
-      setCurrentNote(notesArray[0]); // Set the first note as the current note
-      setNotes(notesArray); // Put notes in a state to display in Sidebar
+      const notesArray = fetchednotes as note[]; // Parse the notes
+      setcurrentnote(notesArray[0]); // Set the first note as the current note
+      setnotes(notesArray); // Put notes in a state to display in Sidebar
     } catch (error) {
       console.error(error);
     }
   };
 
+  const handleNoteClick = (note: note) => {
+    console.log("handleNoteClick", note);
+    setcurrentnote(note);
+  };
+
   const handleModalClose = (headline: string, content: string) => {
-    addNote(headline, content);
+    addnote(headline, content);
     setShowModal(false); // Close the Modal
   };
 
-  const addNote = async (headline: string, content: string) => {
+  const addnote = async (headline: string, content: string) => {
     try {
       const message = await invoke("add_note", { headline, content });
-      console.log("addNote message: ", message);
+      console.log("addnote message: ", message);
 
-      fetchNotes(); // Refresh users after adding
+      fetchnotes(); // Refresh users after adding
     } catch (error) {
       console.error(error);
     }
@@ -70,14 +73,27 @@ function App() {
   const handleRemove = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault(); // Prevent form submission from reloading the page
     try {
-      const message = await invoke("remove_note", { id: currentNote.id });
-      console.log("removeNote message: ", message);
+      const message = await invoke("remove_note", { id: currentnote.id });
+      console.log("removenote message: ", message);
 
-      await fetchNotes(); // Refresh notes after removing
+      await fetchnotes(); // Refresh notes after removing
     } catch (error) {
       console.error(error);
     }
   };
+
+  function formatCreatedAt(dateString: string) {
+    return new Date(dateString)
+      .toLocaleString("en-US", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+      })
+      .replace(",", " at");
+  }
 
   return (
     <div className="main-container flex h-screen w-full bg-[#27c32c]">
@@ -108,31 +124,40 @@ function App() {
             </div>
           </div>
           <div className="w-full h-7 bg-slate-500">search</div>
-          <div className="w-full flex-grow bg-red-500">
-            {notes.length > 0 ? (
-              notes.map((note) => (
-                <div
-                  key={note.id}
-                  className="w-full h-10 bg-slate-400 flex flex-row items-center"
-                >
-                  <div className="w-3/4 h-full">{note.headline}</div>
-                  <div className="w-1/4 h-full">{note.content}</div>
-                </div>
-              ))
-            ) : (
-              <div className="text-center">No notes</div>
-            )}
+          <div className="flex-none w-full h-full pt-4 items-center">
+            {notes.length > 0
+              ? notes
+                  .sort(
+                    (a, b) =>
+                      new Date(b.created_at).getTime() -
+                      new Date(a.created_at).getTime()
+                  )
+                  .map((note: note, index) => (
+                    <div
+                      key={index}
+                      className="cursor-pointer flex flex-col w-full bg-transparent hover:bg-red-500 transition-colors duration-300 justify-between items-center rounded-lg"
+                      onClick={() => handleNoteClick(note)}
+                    >
+                      <div className="text-lg font-bold text-center">
+                        {note.headline}
+                      </div>
+                      <div className="text-sm text-centre">
+                        {note.content.split(" ").slice(0, 4).join(" ") + "..."}
+                      </div>
+                    </div>
+                  ))
+              : null}
           </div>
         </div>
       </div>
       <div className="display w-1/2 h-screen flex flex-row bg-[#5e3737] items-center border-2 border-[#aa4747]">
         <div className="flex w-full">
-          <div className="w-3/4 h-10 bg-slate-400">{currentNote?.headline}</div>
+          <div className="w-3/4 h-10 bg-slate-400">{currentnote?.headline}</div>
           <div className="w-1/4 h-10 bg-slate-500">
-            {currentNote?.created_at}
+            {formatCreatedAt(currentnote?.created_at)}
           </div>
         </div>
-        <div className="w-full h-4/5 bg-black">{currentNote?.content}</div>
+        <div className="w-full h-4/5 bg-black">{currentnote?.content}</div>
       </div>
     </div>
   );
@@ -192,3 +217,29 @@ export default App;
 //   await addUser(currentUser.name);
 //   setCurrentUser({ id: "", name: "" }); // Reset form
 // };
+
+//----
+
+{
+  /* <div className="w-full flex-grow bg-red-500">
+{notes.length > 0 ? (
+  [...notes] // Create a shallow copy of notes to avoid mutating the original array
+    .sort(
+      (a, b) =>
+        new Date(b.created_at).getTime() -
+        new Date(a.created_at).getTime()
+    )
+    .map((note) => (
+      <div
+        key={note.id}
+        className="w-full h-10 bg-slate-400 flex flex-row items-center"
+      >
+        <div className="w-3/4 h-full">{note.headline}</div>
+        <div className="w-1/4 h-full">{note.content}</div>
+      </div>
+    ))
+) : (
+  <div className="text-center">No notes</div>
+)}
+</div> */
+}
