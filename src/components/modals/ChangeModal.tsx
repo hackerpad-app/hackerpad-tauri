@@ -1,17 +1,30 @@
 import React, { useState } from "react";
 
-interface ModalProps {
-  onClose: (headline: string, content: string) => void; // Updated to pass back data
+interface Note {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  headline: string;
+  content: string;
+}
+interface ChangeModalProps {
+  onClose: (headline: string, content: string) => void;
   show: boolean;
   handleClose: () => void;
+  displayedNote: Note;
 }
 
-const Modal: React.FC<ModalProps> = ({ show, handleClose, onClose }) => {
-  const [headline, setHeadline] = useState("");
-  const [content, setContent] = useState("");
+const ChangeModal: React.FC<ChangeModalProps> = ({
+  show,
+  handleClose,
+  onClose,
+  displayedNote,
+}) => {
+  const [headline, setHeadline] = useState(displayedNote.headline);
+  const [content, setContent] = useState(displayedNote.content);
 
   const handleSave = () => {
-    onClose(headline, content); // Pass back the headline and content to App.tsx
+    onClose(headline, content); // Pass back the edited headline and content to App.tsx
     handleClose();
   };
 
@@ -29,7 +42,6 @@ const Modal: React.FC<ModalProps> = ({ show, handleClose, onClose }) => {
           onChange={(e) => setHeadline(e.target.value)}
           className="mb-4 p-2 border rounded"
         />
-
         <input
           placeholder="Content"
           value={content}
@@ -48,4 +60,4 @@ const Modal: React.FC<ModalProps> = ({ show, handleClose, onClose }) => {
   );
 };
 
-export default Modal;
+export default ChangeModal;

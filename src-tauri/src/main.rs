@@ -21,6 +21,7 @@ fn main() {
             database::add_note,
             database::remove_note,
             database::get_notes,
+            database::update_note,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

@@ -3,8 +3,8 @@ import React, { useState, useEffect } from "react";
 import { invoke } from "@tauri-apps/api/tauri";
 
 import { formatCreatedAt } from "./helpers/utils";
-import Modal from "./components/Modal.tsx";
-//import ModalChange from "./components/ModalChange.tsx";
+import AddModal from "./components/modals/AddModal.tsx";
+import ChangeModal from "./components/modals/ChangeModal.tsx";
 
 import "./App.css";
 
@@ -26,7 +26,8 @@ function App() {
     content: "default-content",
   });
 
-  const [showModal, setShowModal] = useState(false);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [showChangeModal, setShowChangeModal] = useState(false);
 
   useEffect(() => {
     invoke("initialize_db")
@@ -48,23 +49,21 @@ function App() {
     }
   };
 
-  const handleModalClose = (headline: string, content: string) => {
+  const handleAddModalClose = (headline: string, content: string) => {
     addNote(headline, content);
-    setShowModal(false);
+    setShowAddModal(false);
   };
 
   const addNote = async (headline: string, content: string) => {
     try {
-      const message = await invoke("add_note", { headline, content });
-      console.log("addNote message: ", message);
-
+      await invoke("add_note", { headline, content });
       fetchNotes(); // Refresh users after adding
     } catch (error) {
       console.error(error);
     }
   };
 
-  const handleRemove = async (e: React.FormEvent<HTMLFormElement>) => {
+  const removeNote = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault(); // Prevent form submission from reloading the page
     try {
       const message = await invoke("remove_note", { id: currentNote.id });
@@ -76,30 +75,54 @@ function App() {
     }
   };
 
-  const handleChange = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleChangeFormSubmit = async (
+    e: React.FormEvent<HTMLFormElement>,
+    headline: string,
+    content: string
+  ) => {
     e.preventDefault(); // Prevent form submission from reloading the page
-    try {
-      const message = await invoke("update_note", {
-        id: currentNote.id,
-        headline: currentNote.headline,
-        content: currentNote.content,
-      });
-      console.log("update_Note message: ", message);
+    await changeNote(headline, content);
+    setShowChangeModal(false);
+  };
 
-      await fetchNotes(); // Refresh Notes after updating
+  const changeNote = async (headline: string, content: string) => {
+    try {
+      await invoke("update_note", {
+        id: currentNote.id,
+        headline,
+        content,
+      });
+      fetchNotes();
     } catch (error) {
       console.error(error);
     }
   };
 
+  // Adjusted to directly update the note, bypassing the need for the event object.
+  const handleChangeModalClose = (headline: string, content: string) => {
+    changeNote(headline, content).then(() => {
+      setShowChangeModal(false);
+    });
+  };
+
   return (
     <div className="main-container flex h-screen w-full bg-[#27c32c]">
-      {showModal && (
+      {showAddModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-          <Modal
-            show={showModal}
-            handleClose={() => setShowModal(false)}
-            onClose={handleModalClose}
+          <AddModal
+            show={showAddModal}
+            handleClose={() => setShowAddModal(false)}
+            onClose={handleAddModalClose}
+          />
+        </div>
+      )}
+      {showChangeModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+          <ChangeModal
+            show={showChangeModal}
+            handleClose={() => setShowChangeModal(false)}
+            onClose={handleChangeModalClose}
+            displayedNote={currentNote}
           />
         </div>
       )}
@@ -108,18 +131,18 @@ function App() {
           <div className="w-full h-16 flex flex-row bg-blue-100">
             <div className="w-1/3 h-full bg-red-500 text-xs">
               <form>
-                <button type="button" onClick={() => setShowModal(true)}>
+                <button type="button" onClick={() => setShowAddModal(true)}>
                   Add
                 </button>
               </form>
             </div>
             <div className="w-1/3 h-full bg-red-400 text-xs">
-              <form onSubmit={handleChange}>
-                <button type="submit">Change</button>
-              </form>
+              <button type="button" onClick={() => setShowChangeModal(true)}>
+                Change
+              </button>
             </div>
             <div className="w-1/3 h-full bg-red-300 text-xs">
-              <form onSubmit={handleRemove}>
+              <form onSubmit={removeNote}>
                 <button type="submit">Remove</button>
               </form>
             </div>

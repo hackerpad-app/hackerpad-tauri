@@ -95,6 +95,25 @@ pub fn remove_note(id: i64) -> Result<String, String> {
 }
 
 
+#[command]
+pub fn update_note(id: i64, headline: String, content: String) -> Result<String, String> {
+    let db_path: PathBuf = data_dir().unwrap_or_else(|| PathBuf::from(".")).join("com.hackerpad-dev.dev/notes.db");
+    let connection = Connection::open(db_path).map_err(|e| e.to_string())?;
+    
+    let now: DateTime<Local> = Local::now();
+
+    let mut statement = connection
+        .prepare("UPDATE notes SET updated_at = ?, headline = ?, content = ? WHERE id = ?")
+        .map_err(|e| e.to_string())?;
+    statement.bind(1, now.to_rfc3339().as_str()).map_err(|e| e.to_string())?;
+    statement.bind(2, headline.as_str()).map_err(|e| e.to_string())?;
+    statement.bind(3, content.as_str()).map_err(|e| e.to_string())?;
+    statement.bind(4, id).map_err(|e| e.to_string())?;
+
+    statement.next().map_err(|e| e.to_string())?;
+    Ok("Note changed successfully".to_string())
+}
+
 
 
 // #[derive(Serialize, Deserialize, Debug)]
