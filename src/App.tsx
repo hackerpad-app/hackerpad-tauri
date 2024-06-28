@@ -75,16 +75,6 @@ function App() {
     }
   };
 
-  const handleChangeFormSubmit = async (
-    e: React.FormEvent<HTMLFormElement>,
-    headline: string,
-    content: string
-  ) => {
-    e.preventDefault(); // Prevent form submission from reloading the page
-    await changeNote(headline, content);
-    setShowChangeModal(false);
-  };
-
   const changeNote = async (headline: string, content: string) => {
     try {
       await invoke("update_note", {
