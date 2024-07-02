@@ -17,6 +17,9 @@ interface Note {
 }
 
 function App() {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<Note[]>([]);
+
   const [Notes, setNotes] = useState<Note[]>([]);
   const [currentNote, setCurrentNote] = useState<Note>({
     id: "",
@@ -28,6 +31,26 @@ function App() {
 
   const [showAddModal, setShowAddModal] = useState(false);
   const [showChangeModal, setShowChangeModal] = useState(false);
+
+  useEffect(() => {
+    if (searchQuery.length > 0) {
+      searchNotes(searchQuery);
+    } else {
+      setSearchResults([]); // Clear search results when query is deleted
+    }
+  }, [searchQuery]);
+
+  const searchNotes = async (query: string) => {
+    try {
+      console.log("query to search: ", searchQuery);
+
+      const searchedNotes = await invoke("search_notes", { search: query });
+      const NotesArray = searchedNotes as Note[];
+      setSearchResults(NotesArray);
+    } catch (error) {
+      console.error("Failed to search notes:", error);
+    }
+  };
 
   useEffect(() => {
     invoke("initialize_db")
@@ -137,28 +160,39 @@ function App() {
               </form>
             </div>
           </div>
-          <div className="w-full h-7 bg-slate-500">search</div>
+          <div className="w-full h-7 bg-slate-500">
+            <input
+              type="text"
+              placeholder="Search..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full h-7 bg-slate-500"
+            />
+          </div>
           <div className="flex-none w-full h-full pt-4 items-center">
-            {Notes.length > 0
+            {(searchResults?.length > 0
+              ? searchResults
+              : Notes.length > 0
               ? Notes.sort(
                   (a, b) =>
                     new Date(b.created_at).getTime() -
                     new Date(a.created_at).getTime()
-                ).map((Note: Note, index) => (
-                  <div
-                    key={index}
-                    className="cursor-pointer flex flex-col w-full bg-transparent hover:bg-red-500 transition-colors duration-300 justify-between items-center rounded-lg"
-                    onClick={() => setCurrentNote(Note)}
-                  >
-                    <div className="text-lg font-bold text-center">
-                      {Note.headline}
-                    </div>
-                    <div className="text-sm text-centre">
-                      {Note.content.split(" ").slice(0, 4).join(" ") + "..."}
-                    </div>
-                  </div>
-                ))
-              : null}
+                )
+              : []
+            ).map((Note: Note, index) => (
+              <div
+                key={index}
+                className="cursor-pointer flex flex-col w-full bg-transparent hover:bg-red-500 transition-colors duration-300 justify-between items-center rounded-lg"
+                onClick={() => setCurrentNote(Note)}
+              >
+                <div className="text-lg font-bold text-center">
+                  {Note.headline}
+                </div>
+                <div className="text-sm text-centre">
+                  {Note.content.split(" ").slice(0, 4).join(" ") + "..."}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
