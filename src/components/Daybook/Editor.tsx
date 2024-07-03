@@ -6,7 +6,6 @@ import TaskList from "@tiptap/extension-task-list";
 import TaskItem from "@tiptap/extension-task-item";
 import Confetti from "react-dom-confetti";
 
-import Menubar from "./Menubar";
 import Note from "../../types/Note";
 
 import "./../../App.css";
@@ -73,7 +72,6 @@ export default function Editor({ currentNote, changeNote }: EditorProps) {
 
   return (
     <div className="main-editor">
-      {editor ? <Menubar editor={editor} /> : null}
       <div className="headline-editor">
         <EditorContent editor={headlineEditor} />
       </div>
