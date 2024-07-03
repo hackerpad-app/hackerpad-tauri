@@ -19,7 +19,7 @@ export default function Daybook() {
   } = useNotes();
 
   return (
-    <div className="flex w-full h-full">
+    <div className="flex w-full h-full bg-slate-100">
       <Sidebar
         searchResults={searchResults}
         allNotes={allNotes}

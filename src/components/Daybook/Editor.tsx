@@ -74,7 +74,7 @@ export default function Editor({ currentNote, changeNote }: EditorProps) {
   return (
     <div className="main-editor">
       {editor ? <Menubar editor={editor} /> : null}
-      <div className="border-b border-[rgba(255,255,255,0.146)] mt-8">
+      <div className="headline-editor">
         <EditorContent editor={headlineEditor} />
       </div>
       <EditorContent editor={editor} />

@@ -1,3 +1,5 @@
+@import "remixicon/fonts/remixicon.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -67,7 +69,7 @@
 
 .main-editor {
   background-color: #0c0e09;
-  border-left: 0.1px solid rgba(255, 255, 255, 0.246);
+  border-left: 0.1px solid rgb(220, 3, 3);
   flex: 1;
   overflow-x: auto;
 }
@@ -148,10 +150,43 @@
   margin: 2rem 0;
 }
 
-
 .main-editor {
   background-color: #0c0e09;
   border-left: 0.1px solid rgba(113, 75, 75, 0.246);
   flex: 1;
-  overflow-x: auto; 
+  overflow-x: auto;
+}
+
+.headline-editor {
+  border-bottom: 0.5px solid rgba(255, 255, 255, 0.146); /* Add a white border */
+  margin-top: 2rem;
+}
+
+.main-editor {
+  background-color: #0c0e09;
+  border-left: 0.1px solid rgba(255, 255, 255, 0.246);
+  flex: 1;
+  overflow-x: auto;
+}
+
+.menu {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0 1rem;
+  position: fixed;
+  z-index: 10;
+  padding: 20px;
+}
+
+.group-item {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.menu-item {
+  padding: 0.5rem 0.75rem;
+}
+
+.menu-item .is-active {
+  color: #55db55;
 }

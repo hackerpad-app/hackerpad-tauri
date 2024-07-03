@@ -197,7 +197,6 @@ function App() {
         </div>
       </div>
 
-      
       <div className="display w-1/2 h-screen flex flex-row bg-[#5e3737] items-center border-2 border-[#aa4747]">
         <div className="flex w-full">
           <div className="w-3/4 h-10 bg-slate-400">{currentNote?.headline}</div>

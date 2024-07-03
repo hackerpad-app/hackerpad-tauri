@@ -66,7 +66,7 @@ export default function Menubar({ editor }: IMenubarProp) {
   ];
 
   return (
-    <div className="flex gap-2 p-5 fixed z-10">
+    <div className="menu">
       {menus.map((group, groupIndex) => {
         return (
           <div className="group-item" key={groupIndex}>
