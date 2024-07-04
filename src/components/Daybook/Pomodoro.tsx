@@ -1,15 +1,17 @@
 import { useState, useEffect, useRef } from "react";
+import { VscDebugStart } from "react-icons/vsc";
+import { IoStopOutline, IoReloadOutline } from "react-icons/io5";
 
 export const config = {
-  session_time: 50,
-  break_time: 10,
+  session_time: 1,
+  break_time: 1,
 };
 
 const SessionTimer = () => {
   const [minutes, setMinutes] = useState(config.session_time);
   const [seconds, setSeconds] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
-  const intervalRef = useRef<number | null>(null); 
+  const intervalRef = useRef<number | null>(null);
 
   const startTimer = () => {
     if (intervalRef.current !== null) return; // if timer is already running, do nothing
@@ -41,14 +43,6 @@ const SessionTimer = () => {
     intervalRef.current = null;
   };
 
-  const resetTimer = () => {
-    setIsRunning(false);
-    if (intervalRef.current !== null) clearInterval(intervalRef.current);
-    intervalRef.current = null;
-    setMinutes(config.session_time); // use config.session_time instead of hard-coded value
-    setSeconds(0);
-  };
-
   useEffect(() => {
     return () => {
       // cleanup function to clear interval on component unmount
@@ -60,21 +54,27 @@ const SessionTimer = () => {
   const timerSeconds = seconds < 10 ? `0${seconds}` : seconds;
 
   return (
-    <div className="timer">
-      <div className="timer-tools">
-        <button
-          className="start-timer"
+    <div
+      style={{
+        borderColor: "rgba(28, 248, 110, 1.0)",
+        borderWidth: "2px",
+        borderStyle: "solid",
+      }}
+      className="p-5 mt-5 space-x-12 flex flex-row items-center justify-center rounded-md "
+    >
+      <div className="flex justify-center space-x-4 p-59">
+        <VscDebugStart
+          className=" hover:text-bright-green cursor-pointer"
           onClick={startTimer}
-          disabled={isRunning}
-        ></button>
-        <button
-          className="stop-timer"
+          style={{ fontSize: "24px" }} // Adjust icon size as needed
+        />
+        <IoStopOutline
+          className=" hover:text-bright-green cursor-pointer"
           onClick={stopTimer}
-          disabled={!isRunning}
-        ></button>
-        <button className="reset-timer" onClick={resetTimer}></button>
+          style={{ fontSize: "24px" }}
+        />
       </div>
-      <div className="clock">
+      <div className="flex items-center justify-center text-4xl text-center h-full">
         <p>
           {timerMinutes}:{timerSeconds}
         </p>
