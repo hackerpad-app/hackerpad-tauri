@@ -71,8 +71,8 @@ export default function Editor({ currentNote, changeNote }: EditorProps) {
   }, [currentNote, headlineEditor, editor]);
 
   return (
-    <div className="main-editor">
-      <div className="headline-editor">
+    <div className="bg-dark-green relative h-screen w-full">
+      <div className="bg-dark-green">
         <EditorContent editor={headlineEditor} />
       </div>
       <EditorContent editor={editor} />

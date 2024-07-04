@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { VscDebugStart } from "react-icons/vsc";
-import { IoStopOutline } from "react-icons/io5";
+import { VscDebugStop } from "react-icons/vsc";
 
 export const config = {
   session_time: 1,
@@ -59,6 +59,7 @@ const SessionTimer = () => {
         borderColor: "rgba(28, 248, 110, 1.0)",
         borderWidth: "2px",
         borderStyle: "solid",
+        zIndex: 0,
       }}
       className="p-5 mt-5 space-x-12 flex flex-row items-center justify-center rounded-md "
     >
@@ -68,7 +69,7 @@ const SessionTimer = () => {
           onClick={startTimer}
           style={{ fontSize: "24px" }} // Adjust icon size as needed
         />
-        <IoStopOutline
+        <VscDebugStop
           className=" hover:text-bright-green cursor-pointer"
           onClick={stopTimer}
           style={{ fontSize: "24px" }}

@@ -19,13 +19,17 @@ export default function Daybook() {
   } = useNotes();
 
   return (
-    <div className="flex w-full h-full bg-slate-100">
-      <Sidebar
-        searchResults={searchResults}
-        allNotes={allNotes}
-        setCurrentNote={setCurrentNote}
-      />
-      <Editor currentNote={currentNote} changeNote={changeNote} />
+    <div className="flex flex-row  bg-slate-500">
+      <div className="flex w-1/5 h-full">
+        <Sidebar
+          searchResults={searchResults}
+          allNotes={allNotes}
+          setCurrentNote={setCurrentNote}
+        />
+      </div>
+      <div className="flex w-4/5 h-full">
+        <Editor currentNote={currentNote} changeNote={changeNote} />
+      </div>
     </div>
   );
 }

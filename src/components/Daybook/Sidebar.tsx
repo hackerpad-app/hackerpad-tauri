@@ -55,6 +55,7 @@ function NoteList({ searchResults, allNotes, setCurrentNote }: NoteListProps) {
         borderColor: "rgba(22, 163, 74, 0.5)",
         borderWidth: "2px",
         borderStyle: "solid",
+        zIndex: 0,
       }}
       className="h-4/5 bg-transparent rounded-lg"
     >
@@ -76,15 +77,23 @@ function NoteList({ searchResults, allNotes, setCurrentNote }: NoteListProps) {
   );
 }
 
-const PadsPanel = ({ isVisible }: PadsPanelProps) => {
+const PadsPanel = ({
+  isVisible,
+  onMouseEnter,
+  onMouseLeave,
+}: PadsPanelProps & { onMouseEnter: () => void; onMouseLeave: () => void }) => {
   return (
     <div
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
       style={{
         transition: "opacity 0.5s, visibility 0.1s",
         opacity: isVisible ? 1 : 0,
+        zIndex: isVisible ? 10 : -1,
         visibility: isVisible ? "visible" : "hidden",
         background:
           "linear-gradient(180deg,rgba(41, 71, 42, 0.9) 40%, rgba(41, 71, 42, 0.1) 100%)",
+        pointerEvents: isVisible ? "auto" : "none", // Disable pointer events when not visible
       }}
       className=" relative h-screen bg-bright-green opacity-50 flex flex-col justify-between items-center py-10 p-5"
     >
@@ -98,9 +107,9 @@ const PadsPanel = ({ isVisible }: PadsPanelProps) => {
         <div className="py-4" style={{ fontSize: "30px" }}>
           <PiBrainThin />
         </div>
-      </div>
-      <div className="py-4" style={{ fontSize: "30px" }}>
-        <CiSettings />
+        <div className="py-4" style={{ fontSize: "30px" }}>
+          <CiSettings />
+        </div>
       </div>
     </div>
   );
@@ -112,10 +121,11 @@ export default function Sidebar({
   setCurrentNote,
 }: SidebarProps) {
   const [showPadsPanel, setPadsPanel] = useState(false);
+  const [isMouseOverPanel, setIsMouseOverPanel] = useState(false);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      setPadsPanel(e.clientX < 25);
+      setPadsPanel(e.clientX < 1 || isMouseOverPanel);
     };
 
     window.addEventListener("mousemove", handleMouseMove);
@@ -123,12 +133,16 @@ export default function Sidebar({
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
     };
-  }, []);
+  }, [isMouseOverPanel]); // Add isMouseOverPanel as a dependency
 
   return (
     <div className="relative h-screen bg-dark-green">
       <div className="absolute top-0 left-0  h-full flex justify-start items-start">
-        <PadsPanel isVisible={showPadsPanel} />
+        <PadsPanel
+          isVisible={showPadsPanel}
+          onMouseEnter={() => setIsMouseOverPanel(true)}
+          onMouseLeave={() => setIsMouseOverPanel(false)}
+        />{" "}
       </div>
       <div className="w-full h-screen flex flex-col bg-dark-green p-5 mt-10">
         <NoteList
