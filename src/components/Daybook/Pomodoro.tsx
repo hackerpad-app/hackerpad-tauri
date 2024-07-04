@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { VscDebugStart } from "react-icons/vsc";
-import { IoStopOutline, IoReloadOutline } from "react-icons/io5";
+import { IoStopOutline } from "react-icons/io5";
 
 export const config = {
   session_time: 1,

@@ -111,7 +111,7 @@ export default function Sidebar({
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      setPadsPanel(e.clientX < 50);
+      setPadsPanel(e.clientX < 25);
     };
 
     window.addEventListener("mousemove", handleMouseMove);
@@ -123,7 +123,7 @@ export default function Sidebar({
 
   return (
     <div className="relative h-screen bg-dark-green">
-      <div className="absolute top-0 left-0 w-full h-full flex justify-start items-start">
+      <div className="absolute top-0 left-0  h-full flex justify-start items-start">
         <PadsPanel isVisible={showPadsPanel} />
       </div>
       <div className="w-full h-screen flex flex-col bg-dark-green p-5 mt-10">
