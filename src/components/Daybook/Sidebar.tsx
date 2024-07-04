@@ -6,6 +6,7 @@ import SessionTimer from "./Pomodoro";
 import { CiSettings } from "react-icons/ci";
 import { PiBrainThin } from "react-icons/pi";
 import { PiCalendarCheckThin } from "react-icons/pi";
+import { PiBugBeetleThin } from "react-icons/pi";
 
 interface SidebarProps {
   searchResults: Note[];
@@ -90,6 +91,9 @@ const PadsPanel = ({ isVisible }: PadsPanelProps) => {
       <div style={{ opacity: isVisible ? 1 : 0, transition: "opacity 0.2s" }}>
         <div className="py-4" style={{ fontSize: "30px" }}>
           <PiCalendarCheckThin />
+        </div>
+        <div className="py-4" style={{ fontSize: "30px" }}>
+          <PiBugBeetleThin />
         </div>
         <div className="py-4" style={{ fontSize: "30px" }}>
           <PiBrainThin />
