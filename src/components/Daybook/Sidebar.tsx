@@ -1,5 +1,11 @@
+import React, { useState, useEffect } from "react";
+
 import Note from "./../../types/Note";
 import SessionTimer from "./Pomodoro";
+
+import { CiSettings } from "react-icons/ci";
+import { PiBrainThin } from "react-icons/pi";
+import { PiCalendarCheckThin } from "react-icons/pi";
 
 interface SidebarProps {
   searchResults: Note[];
@@ -16,6 +22,10 @@ interface NoteListProps {
 interface NoteItemProps {
   note: Note;
   setCurrentNote: React.Dispatch<React.SetStateAction<Note>>;
+}
+
+interface PadsPanelProps {
+  isVisible: boolean;
 }
 
 const NoteItem = ({ note, setCurrentNote }: NoteItemProps) => {
@@ -65,14 +75,58 @@ function NoteList({ searchResults, allNotes, setCurrentNote }: NoteListProps) {
   );
 }
 
+const PadsPanel = ({ isVisible }: PadsPanelProps) => {
+  return (
+    <div
+      style={{
+        transition: "opacity 0.5s, visibility 0.1s",
+        opacity: isVisible ? 1 : 0,
+        visibility: isVisible ? "visible" : "hidden",
+        background:
+          "linear-gradient(180deg,rgba(41, 71, 42, 0.9) 40%, rgba(41, 71, 42, 0.1) 100%)",
+      }}
+      className=" relative h-screen bg-bright-green opacity-50 flex flex-col justify-between items-center py-10 p-5"
+    >
+      <div style={{ opacity: isVisible ? 1 : 0, transition: "opacity 0.2s" }}>
+        <div className="py-4" style={{ fontSize: "30px" }}>
+          <PiCalendarCheckThin />
+        </div>
+        <div className="py-4" style={{ fontSize: "30px" }}>
+          <PiBrainThin />
+        </div>
+      </div>
+      <div className="py-4" style={{ fontSize: "30px" }}>
+        <CiSettings />
+      </div>
+    </div>
+  );
+};
+
 export default function Sidebar({
   searchResults,
   allNotes,
   setCurrentNote,
 }: SidebarProps) {
+  const [showPadsPanel, setPadsPanel] = useState(false);
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      setPadsPanel(e.clientX < 50);
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+    };
+  }, []);
+
   return (
-    <div className="h-screen bg-dark-green flex flex-col justify-center items-center">
-      <div className="w-full h-screen flex-col bg-dark-green p-5 mt-10">
+    <div className="relative h-screen bg-dark-green">
+      <div className="absolute top-0 left-0 w-full h-full flex justify-start items-start">
+        <PadsPanel isVisible={showPadsPanel} />
+      </div>
+      <div className="w-full h-screen flex flex-col bg-dark-green p-5 mt-10">
         <NoteList
           searchResults={searchResults}
           allNotes={allNotes}
