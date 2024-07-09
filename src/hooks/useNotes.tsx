@@ -45,7 +45,6 @@ export default function useNotes() {
   const fetchNotes = async () => {
     try {
       const fetchedNotes = await invoke("get_notes"); // Get Notes from the database
-      console.log("fetchedNotes", fetchedNotes);
 
       const NotesArray = fetchedNotes as Note[]; // Parse the Notes
       setCurrentNote(NotesArray[0]); // Set the first Note on display
@@ -58,7 +57,7 @@ export default function useNotes() {
   const addNote = async (headline: string, content: string) => {
     try {
       await invoke("add_note", { headline, content });
-      fetchNotes(); // Refresh users after adding
+      fetchNotes();
     } catch (error) {
       console.error(error);
     }

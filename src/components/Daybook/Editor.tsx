@@ -10,23 +10,49 @@ import "./../../App.css";
 interface EditorProps {
   currentNote: Note | null;
   changeNote: (headline: string, content: string) => void;
+  addNote: (headline: string, content: string) => void;
+  removeNote: () => void;
 }
 
-export default function Editor({ currentNote, changeNote }: EditorProps) {
-  // const [confetti, setConfetti] = useState(false);
-  // const [checkedCount, setCheckedCount] = useState(0);
+interface ToolsProps {
+  removeNote: () => void;
+  addNote: (headline: string, content: string) => void;
+}
 
+const Tools = ({ removeNote, addNote }: ToolsProps) => {
+  const handleAddNote = () => {
+    addNote("", "");
+  };
+
+  return (
+    <div className="flex justify-between p-2">
+      <div className="flex">
+        <button onClick={removeNote} className="mr-2">
+          Delete
+        </button>
+        <button onClick={handleAddNote}>Add</button>
+      </div>
+      <div>
+        <input type="text" placeholder="Search" className="border rounded" />
+      </div>
+    </div>
+  );
+};
+
+export default function Editor({
+  currentNote,
+  changeNote,
+  addNote,
+  removeNote,
+}: EditorProps) {
   const headlineEditor = useEditor({
     extensions: [StarterKit],
     content: "",
-
     onUpdate: () => {
       let newHeadline = headlineEditor?.getHTML();
-      if (newHeadline !== undefined) {
-        if (currentNote) {
-          let cleanedHeadline = newHeadline.replace(/<[^>]*>/g, "");
-          changeNote(cleanedHeadline, currentNote.content);
-        }
+      if (newHeadline !== undefined && currentNote) {
+        let cleanedHeadline = newHeadline.replace(/<[^>]*>/g, "");
+        changeNote(cleanedHeadline, currentNote.content);
       }
     },
   });
@@ -34,13 +60,10 @@ export default function Editor({ currentNote, changeNote }: EditorProps) {
   const editor = useEditor({
     extensions: [StarterKit],
     content: ``,
-
     onUpdate: () => {
       let newContent = editor?.getHTML();
-      if (newContent !== undefined) {
-        if (currentNote) {
-          changeNote(currentNote.headline, newContent);
-        }
+      if (newContent !== undefined && currentNote) {
+        changeNote(currentNote.headline, newContent);
       }
     },
   });
@@ -48,20 +71,16 @@ export default function Editor({ currentNote, changeNote }: EditorProps) {
   useEffect(() => {
     if (currentNote) {
       let wrappedHeadline = `<h1>${currentNote.headline}</h1>`;
-
       headlineEditor?.commands.setContent(wrappedHeadline);
       editor?.commands.setContent(currentNote.content);
-    } else {
-      headlineEditor?.commands.setContent("", false, {
-        preserveWhitespace: "full",
-      });
-      editor?.commands.setContent("", false, { preserveWhitespace: "full" });
     }
-  }, [currentNote, headlineEditor, editor]);
+  }, [headlineEditor, editor, currentNote]);
 
   return (
     <div className="bg-dark-green relative h-screen w-full">
-      <div className="relative h-2/30 ">Kurde</div>
+      <div className="relative h-2/30 ">
+        <Tools addNote={addNote} removeNote={removeNote} />
+      </div>
       <div className="relative h-1/10 border border-green-300">
         <EditorContent editor={headlineEditor} />
       </div>

@@ -28,7 +28,12 @@ export default function Daybook() {
         />
       </div>
       <div className="flex w-4/5 overflow-y-auto bg-dark-green">
-        <Editor currentNote={currentNote} changeNote={changeNote} />
+        <Editor
+          currentNote={currentNote}
+          changeNote={changeNote}
+          addNote={addNote}
+          removeNote={removeNote}
+        />
       </div>
     </div>
   );
