@@ -45,7 +45,13 @@ export default function useNotes() {
       if (NotesArray.length > 0) {
         setDisplayedNote(NotesArray[0]);
       } else {
-        setDisplayedNote(null);
+        setDisplayedNote({
+          id: "temp-id",
+          headline: "Welcome to hackerpad :)",
+          content: "",
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        });
       }
       setAllNotes(NotesArray);
     } catch (error) {
@@ -90,17 +96,13 @@ export default function useNotes() {
   };
 
   return {
-    fetchNotes,
     createNote,
     removeNote,
     updateNote,
-    searchQuery,
     setSearchQuery,
-    searchResults,
-    setSearchResults,
-    allNotes,
-    setAllNotes,
-    displayedNote,
     setDisplayedNote,
+    searchResults,
+    allNotes,
+    displayedNote,
   };
 }

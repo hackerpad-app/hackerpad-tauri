@@ -4,18 +4,14 @@ import Editor from "./Editor";
 
 export default function Daybook() {
   const {
-    fetchNotes,
     createNote,
     removeNote,
     updateNote,
-    searchQuery,
     setSearchQuery,
-    searchResults,
-    setSearchResults,
-    allNotes,
-    setAllNotes,
-    displayedNote,
     setDisplayedNote,
+    searchResults,
+    allNotes,
+    displayedNote,
   } = useNotes();
 
   return (
@@ -27,7 +23,6 @@ export default function Daybook() {
           setDisplayedNote={setDisplayedNote}
           displayedNote={displayedNote}
           updateNote={updateNote}
-          searchResults={searchResults}
         />
       </div>
       <div className="flex w-4/5 overflow-y-auto bg-dark-green">
