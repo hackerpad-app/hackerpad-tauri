@@ -32,13 +32,19 @@ interface PadsPanelProps {
 const NoteItem = ({ note, setCurrentNote }: NoteItemProps) => {
   return (
     <div
-      className="cursor-pointer p-2 flex flex-row w-full bg-transparent border border-transparent hover:border-bright-green transition-colors duration-100 justify-between items-center rounded-lg"
+      className="cursor-pointer p-2 flex flex-row  bg-transparent border border-transparent hover:border-bright-green transition-colors duration-100 justify-between items-center rounded-lg"
       onClick={() => setCurrentNote(note)}
     >
       <div className="p-2">
-        <div className="text-sm font-bold">{note.headline}</div>
+        <div className="text-sm font-bold">
+          {note.headline.length > 15
+            ? note.headline.substring(0, 15) + "..."
+            : note.headline}
+        </div>
         <div className="text-sm">
-          {note.content.split(" ").slice(0, 4).join(" ") + "..."}
+          {note.content.length > 15
+            ? note.content.substring(0, 15) + "..."
+            : note.content}
         </div>
       </div>
       <div className="text-xs text-center p-2 text-white opacity-25  self-start  flex-shrink-0">
@@ -59,7 +65,7 @@ function NoteList({ searchResults, allNotes, setCurrentNote }: NoteListProps) {
       }}
       className="h-4/5 bg-transparent rounded-lg"
     >
-      <div className="flex-none w-full h-full items-cente bg-transparent hover:border-dark-green">
+      <div className="flex-none  h-full items-cente bg-transparent hover:border-dark-green">
         {(searchResults?.length > 0
           ? searchResults
           : allNotes.length > 0
@@ -136,7 +142,7 @@ export default function Sidebar({
   }, [isMouseOverPanel]); // Add isMouseOverPanel as a dependency
 
   return (
-    <div className="relative h-screen bg-dark-green">
+    <div className="relative w-screen h-screen bg-dark-green">
       <div className="absolute top-0 left-0  h-full flex justify-start items-start">
         <PadsPanel
           isVisible={showPadsPanel}
@@ -144,7 +150,7 @@ export default function Sidebar({
           onMouseLeave={() => setIsMouseOverPanel(false)}
         />{" "}
       </div>
-      <div className="w-full h-screen flex flex-col bg-dark-green p-5 mt-10">
+      <div className="h-screen flex flex-col bg-dark-green p-5 mt-10">
         <NoteList
           searchResults={searchResults}
           allNotes={allNotes}

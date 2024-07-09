@@ -1,10 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import TaskList from "@tiptap/extension-task-list";
-import TaskItem from "@tiptap/extension-task-item";
-import Confetti from "react-dom-confetti";
 
 import Note from "../../types/Note";
 
@@ -16,8 +13,8 @@ interface EditorProps {
 }
 
 export default function Editor({ currentNote, changeNote }: EditorProps) {
-  const [confetti, setConfetti] = useState(false);
-  const [checkedCount, setCheckedCount] = useState(0);
+  // const [confetti, setConfetti] = useState(false);
+  // const [checkedCount, setCheckedCount] = useState(0);
 
   const headlineEditor = useEditor({
     extensions: [StarterKit],
@@ -35,7 +32,7 @@ export default function Editor({ currentNote, changeNote }: EditorProps) {
   });
 
   const editor = useEditor({
-    extensions: [StarterKit, TaskList, TaskItem],
+    extensions: [StarterKit],
     content: ``,
 
     onUpdate: () => {
@@ -43,14 +40,6 @@ export default function Editor({ currentNote, changeNote }: EditorProps) {
       if (newContent !== undefined) {
         if (currentNote) {
           changeNote(currentNote.headline, newContent);
-          let newCheckedCount = (
-            newContent.match(/<input type="checkbox" checked="checked">/g) || []
-          ).length;
-          if (newCheckedCount > checkedCount) {
-            setConfetti(true);
-            setTimeout(() => setConfetti(false), 100);
-          }
-          setCheckedCount(newCheckedCount);
         }
       }
     },
@@ -72,11 +61,13 @@ export default function Editor({ currentNote, changeNote }: EditorProps) {
 
   return (
     <div className="bg-dark-green relative h-screen w-full">
-      <div className="bg-dark-green">
+      <div className="relative h-2/30 ">Kurde</div>
+      <div className="relative h-1/10 border border-green-300">
         <EditorContent editor={headlineEditor} />
       </div>
-      <EditorContent editor={editor} />
-      <Confetti active={confetti} />
+      <div className="relative h-full border border-white overflow-y-auto">
+        <EditorContent editor={editor} />
+      </div>
     </div>
   );
 }
