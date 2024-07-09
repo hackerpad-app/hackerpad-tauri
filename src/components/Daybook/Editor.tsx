@@ -9,19 +9,34 @@ import "./../../App.css";
 
 interface EditorProps {
   displayedNote: Note | null;
-  updateNote: (headline: string, content: string) => void;
-  createNote: (headline: string, content: string) => void;
+  setDisplayedNote: React.Dispatch<React.SetStateAction<Note | null>>;
+  createNote: () => Promise<void>;
   removeNote: () => Promise<void>;
+  updateNote: (headline: string, content: string) => Promise<void>;
 }
 
 interface ToolsProps {
-  createNote: (headline: string, content: string) => void;
+  createNote: () => Promise<void>;
   removeNote: () => Promise<void>;
+  updateNote: (headline: string, content: string) => Promise<void>;
+  displayedNote: Note | null;
 }
 
-const Tools = ({ removeNote, createNote }: ToolsProps) => {
-  const handleCreateNote = () => {
-    createNote("", "");
+const Tools = ({
+  removeNote,
+  createNote,
+  updateNote,
+  displayedNote,
+}: ToolsProps) => {
+  const handleCreateNote = async () => {
+    try {
+      await createNote();
+      if (displayedNote) {
+        await updateNote(displayedNote.headline, displayedNote.content);
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -41,9 +56,10 @@ const Tools = ({ removeNote, createNote }: ToolsProps) => {
 
 export default function Editor({
   displayedNote,
-  updateNote,
+  setDisplayedNote,
   createNote,
   removeNote,
+  updateNote,
 }: EditorProps) {
   const headlineEditor = useEditor({
     extensions: [StarterKit],
@@ -52,7 +68,8 @@ export default function Editor({
       let newHeadline = headlineEditor?.getHTML();
       if (newHeadline !== undefined && displayedNote) {
         let cleanedHeadline = newHeadline.replace(/<[^>]*>/g, "");
-        updateNote(cleanedHeadline, displayedNote.content);
+        const newNote = { ...displayedNote, headline: cleanedHeadline };
+        setDisplayedNote(newNote);
       }
     },
   });
@@ -63,7 +80,8 @@ export default function Editor({
     onUpdate: () => {
       let newContent = editor?.getHTML();
       if (newContent !== undefined && displayedNote) {
-        updateNote(displayedNote.headline, newContent);
+        const newNote = { ...displayedNote, content: newContent };
+        setDisplayedNote(newNote);
       }
     },
   });
@@ -71,15 +89,24 @@ export default function Editor({
   useEffect(() => {
     if (displayedNote) {
       let wrappedHeadline = `<h1>${displayedNote.headline}</h1>`;
-      headlineEditor?.commands.setContent(wrappedHeadline);
-      editor?.commands.setContent(displayedNote.content);
+      headlineEditor?.commands.setContent(wrappedHeadline, false, {
+        preserveWhitespace: true,
+      });
+      editor?.commands.setContent(displayedNote.content, false, {
+        preserveWhitespace: true,
+      });
     }
   }, [headlineEditor, editor, displayedNote]);
 
   return (
     <div className="bg-dark-green relative h-screen w-full">
       <div className="relative h-2/30 ">
-        <Tools createNote={createNote} removeNote={removeNote} />
+        <Tools
+          createNote={createNote}
+          removeNote={removeNote}
+          updateNote={updateNote}
+          displayedNote={displayedNote}
+        />
       </div>
       <div className="relative h-1/10 border border-green-300">
         <EditorContent editor={headlineEditor} />

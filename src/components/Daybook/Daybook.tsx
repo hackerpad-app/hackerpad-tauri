@@ -25,14 +25,17 @@ export default function Daybook() {
           searchResults={searchResults}
           allNotes={allNotes}
           setDisplayedNote={setDisplayedNote}
+          displayedNote={displayedNote}
+          updateNote={updateNote}
         />
       </div>
       <div className="flex w-4/5 overflow-y-auto bg-dark-green">
         <Editor
           displayedNote={displayedNote}
-          updateNote={updateNote}
+          setDisplayedNote={setDisplayedNote}
           createNote={createNote}
           removeNote={removeNote}
+          updateNote={updateNote}
         />
       </div>
     </div>

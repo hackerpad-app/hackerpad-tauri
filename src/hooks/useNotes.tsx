@@ -3,23 +3,17 @@ import { invoke } from "@tauri-apps/api/tauri";
 import Note from "./../types/Note";
 
 export default function useNotes() {
+  const [allNotes, setAllNotes] = useState<Note[]>([]);
+  const [displayedNote, setDisplayedNote] = useState<Note | null>(null);
+
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<Note[]>([]);
-
-  const [allNotes, setAllNotes] = useState<Note[]>([]);
-  const [displayedNote, setDisplayedNote] = useState<Note>({
-    id: "",
-    created_at: "20.08.1998",
-    updated_at: "20.08.2024",
-    headline: "default-headline",
-    content: "default-content",
-  });
 
   useEffect(() => {
     invoke("initialize_db")
       .then((message) => console.log(message))
       .catch((error) => console.error(error));
-    fetchNotes(); // Fetch users when the component mounts
+    fetchNotes();
   }, []);
 
   useEffect(() => {
@@ -32,7 +26,7 @@ export default function useNotes() {
 
   const searchNotes = async (query: string) => {
     try {
-      console.log("query to search: ", searchQuery);
+      console.log("Searching notes with query: ", searchQuery);
 
       const searchedNotes = await invoke("search_notes", { search: query });
       const NotesArray = searchedNotes as Note[];
@@ -42,22 +36,29 @@ export default function useNotes() {
     }
   };
 
+  // Get all notes from a database, put them to a state and set the first note as displayed
   const fetchNotes = async () => {
     try {
       const fetchedNotes = await invoke("get_notes"); // Get Notes from the database
 
       const NotesArray = fetchedNotes as Note[]; // Parse the Notes
-      setDisplayedNote(NotesArray[0]); // Set the first Note on display
-      setAllNotes(NotesArray); // Put Notes in a state to display in Sidebar
+
+      if (NotesArray.length > 0) {
+        setDisplayedNote(NotesArray[0]);
+      }
+      else{
+        setDisplayedNote(null);
+      }
+      setAllNotes(NotesArray);
     } catch (error) {
       console.error(error);
     }
   };
 
-  const createNote = async (headline: string, content: string) => {
+  const createNote = async () => {
     try {
-      await invoke("create_note", { headline, content });
-      fetchNotes();
+      await invoke("create_note");
+      await fetchNotes();
     } catch (error) {
       console.error(error);
     }
@@ -65,10 +66,11 @@ export default function useNotes() {
 
   const removeNote = async () => {
     try {
-      const message = await invoke("remove_note", { id: displayedNote.id });
-      console.log("removeNote message: ", message);
+      if (displayedNote === null) return;
 
-      await fetchNotes(); // Refresh Notes after removing
+      const message = await invoke("remove_note", { id: displayedNote.id });
+      console.log(message);
+      await fetchNotes(); // Refresh Notes after removing a note
     } catch (error) {
       console.error(error);
     }
@@ -76,12 +78,14 @@ export default function useNotes() {
 
   const updateNote = async (headline: string, content: string) => {
     try {
+      if (displayedNote === null) return;
+
       await invoke("update_note", {
         id: displayedNote.id,
         headline,
         content,
       });
-      fetchNotes();
+      await fetchNotes();
     } catch (error) {
       console.error(error);
     }

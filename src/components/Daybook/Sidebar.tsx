@@ -11,35 +11,44 @@ import { PiBugBeetleThin } from "react-icons/pi";
 interface SidebarProps {
   searchResults: Note[];
   allNotes: Note[];
-  setDisplayedNote: React.Dispatch<React.SetStateAction<Note>>;
+  setDisplayedNote: React.Dispatch<React.SetStateAction<Note | null>>;
+  displayedNote: Note | null;
+  updateNote: (headline: string, content: string) => Promise<void>;
 }
 
 interface NoteListProps {
   searchResults: Note[];
   allNotes: Note[];
-  setDisplayedNote: React.Dispatch<React.SetStateAction<Note>>;
+  updateNote: (headline: string, content: string) => Promise<void>;
+  displayedNote: Note | null;
+  setDisplayedNote: React.Dispatch<React.SetStateAction<Note | null>>;
 }
 
 interface NoteItemProps {
   note: Note;
-  setDisplayedNote: React.Dispatch<React.SetStateAction<Note>>;
+  updateNote: (headline: string, content: string) => Promise<void>;
+  displayedNote: Note | null;
+  setDisplayedNote: React.Dispatch<React.SetStateAction<Note | null>>;
 }
 
 interface PadsPanelProps {
   isVisible: boolean;
 }
 
-const NoteItem = ({ note, setDisplayedNote }: NoteItemProps) => {
+const NoteItem = ({
+  note,
+  updateNote,
+  displayedNote,
+  setDisplayedNote,
+}: NoteItemProps) => {
   return (
     <div
       className="cursor-pointer p-2 flex flex-row  bg-transparent border border-transparent hover:border-bright-green transition-colors duration-100 justify-between items-center rounded-lg"
-      onClick={() => {
-        console.log(
-          "NoteItem clicked, setting current note, previous ID: ",
-          note.id
-        );
+      onClick={async () => {
+        if (displayedNote) {
+          await updateNote(displayedNote.headline, displayedNote.content);
+        }
         setDisplayedNote(note);
-        console.log("Current note set, new ID: ", note.id);
       }}
     >
       <div className="p-2">
@@ -65,6 +74,8 @@ function NoteList({
   searchResults,
   allNotes,
   setDisplayedNote,
+  updateNote,
+  displayedNote,
 }: NoteListProps) {
   return (
     <div
@@ -90,6 +101,8 @@ function NoteList({
           <NoteItem
             key={index}
             note={note}
+            updateNote={updateNote}
+            displayedNote={displayedNote}
             setDisplayedNote={setDisplayedNote}
           />
         ))}
@@ -139,6 +152,8 @@ const PadsPanel = ({
 export default function Sidebar({
   searchResults,
   allNotes,
+  updateNote,
+  displayedNote,
   setDisplayedNote,
 }: SidebarProps) {
   const [showPadsPanel, setPadsPanel] = useState(false);
@@ -169,6 +184,8 @@ export default function Sidebar({
         <NoteList
           searchResults={searchResults}
           allNotes={allNotes}
+          updateNote={updateNote}
+          displayedNote={displayedNote}
           setDisplayedNote={setDisplayedNote}
         />
         <SessionTimer />
