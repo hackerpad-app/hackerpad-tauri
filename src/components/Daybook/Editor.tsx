@@ -45,12 +45,12 @@ const Tools = ({
     <div className="flex justify-between">
       <div className="flex ml-2">
         <button onClick={handleCreateNote} className="mr-3 bg-transparent">
-          <div className="py-4" style={{ fontSize: "25px" }}>
+          <div className="py-4 text-bright-green" style={{ fontSize: "25px" }}>
             <PiNotePencilLight />
           </div>
         </button>
         <button onClick={removeNote} className="bg-transparent">
-          <div className="py-4" style={{ fontSize: "25px" }}>
+          <div className="py-4 text-bright-green" style={{ fontSize: "25px" }}>
             <AiOutlineDelete />
           </div>
         </button>
@@ -120,10 +120,10 @@ export default function Editor({
           displayedNote={displayedNote}
         />
       </div>
-      <div className="relative h-1/10 border border-green-300">
+      <div className="relative h-1/10 border border-green-900">
         <EditorContent editor={headlineEditor} />
       </div>
-      <div className="relative h-full border border-white overflow-y-auto">
+      <div className="relative h-full border border-green-900 overflow-y-auto">
         <EditorContent editor={editor} />
       </div>
     </div>
