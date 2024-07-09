@@ -5,17 +5,17 @@ import Editor from "./Editor";
 export default function Daybook() {
   const {
     fetchNotes,
-    addNote,
+    createNote,
     removeNote,
-    changeNote,
+    updateNote,
     searchQuery,
     setSearchQuery,
     searchResults,
     setSearchResults,
     allNotes,
     setAllNotes,
-    currentNote,
-    setCurrentNote,
+    displayedNote,
+    setDisplayedNote,
   } = useNotes();
 
   return (
@@ -24,14 +24,14 @@ export default function Daybook() {
         <Sidebar
           searchResults={searchResults}
           allNotes={allNotes}
-          setCurrentNote={setCurrentNote}
+          setDisplayedNote={setDisplayedNote}
         />
       </div>
       <div className="flex w-4/5 overflow-y-auto bg-dark-green">
         <Editor
-          currentNote={currentNote}
-          changeNote={changeNote}
-          addNote={addNote}
+          displayedNote={displayedNote}
+          updateNote={updateNote}
+          createNote={createNote}
           removeNote={removeNote}
         />
       </div>

@@ -8,20 +8,20 @@ import Note from "../../types/Note";
 import "./../../App.css";
 
 interface EditorProps {
-  currentNote: Note | null;
-  changeNote: (headline: string, content: string) => void;
-  addNote: (headline: string, content: string) => void;
+  displayedNote: Note | null;
+  updateNote: (headline: string, content: string) => void;
+  createNote: (headline: string, content: string) => void;
   removeNote: () => void;
 }
 
 interface ToolsProps {
   removeNote: () => void;
-  addNote: (headline: string, content: string) => void;
+  createNote: (headline: string, content: string) => void;
 }
 
-const Tools = ({ removeNote, addNote }: ToolsProps) => {
-  const handleAddNote = () => {
-    addNote("", "");
+const Tools = ({ removeNote, createNote }: ToolsProps) => {
+  const handlecreateNote = () => {
+    createNote("", "");
   };
 
   return (
@@ -30,7 +30,7 @@ const Tools = ({ removeNote, addNote }: ToolsProps) => {
         <button onClick={removeNote} className="mr-2">
           Delete
         </button>
-        <button onClick={handleAddNote}>Add</button>
+        <button onClick={handlecreateNote}>Add</button>
       </div>
       <div>
         <input type="text" placeholder="Search" className="border rounded" />
@@ -40,9 +40,9 @@ const Tools = ({ removeNote, addNote }: ToolsProps) => {
 };
 
 export default function Editor({
-  currentNote,
-  changeNote,
-  addNote,
+  displayedNote,
+  updateNote,
+  createNote,
   removeNote,
 }: EditorProps) {
   const headlineEditor = useEditor({
@@ -50,9 +50,9 @@ export default function Editor({
     content: "",
     onUpdate: () => {
       let newHeadline = headlineEditor?.getHTML();
-      if (newHeadline !== undefined && currentNote) {
+      if (newHeadline !== undefined && displayedNote) {
         let cleanedHeadline = newHeadline.replace(/<[^>]*>/g, "");
-        changeNote(cleanedHeadline, currentNote.content);
+        updateNote(cleanedHeadline, displayedNote.content);
       }
     },
   });
@@ -62,24 +62,24 @@ export default function Editor({
     content: ``,
     onUpdate: () => {
       let newContent = editor?.getHTML();
-      if (newContent !== undefined && currentNote) {
-        changeNote(currentNote.headline, newContent);
+      if (newContent !== undefined && displayedNote) {
+        updateNote(displayedNote.headline, newContent);
       }
     },
   });
 
   useEffect(() => {
-    if (currentNote) {
-      let wrappedHeadline = `<h1>${currentNote.headline}</h1>`;
+    if (displayedNote) {
+      let wrappedHeadline = `<h1>${displayedNote.headline}</h1>`;
       headlineEditor?.commands.setContent(wrappedHeadline);
-      editor?.commands.setContent(currentNote.content);
+      editor?.commands.setContent(displayedNote.content);
     }
-  }, [headlineEditor, editor, currentNote]);
+  }, [headlineEditor, editor, displayedNote]);
 
   return (
     <div className="bg-dark-green relative h-screen w-full">
       <div className="relative h-2/30 ">
-        <Tools addNote={addNote} removeNote={removeNote} />
+        <Tools createNote={createNote} removeNote={removeNote} />
       </div>
       <div className="relative h-1/10 border border-green-300">
         <EditorContent editor={headlineEditor} />

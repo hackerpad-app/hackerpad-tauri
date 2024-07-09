@@ -11,29 +11,36 @@ import { PiBugBeetleThin } from "react-icons/pi";
 interface SidebarProps {
   searchResults: Note[];
   allNotes: Note[];
-  setCurrentNote: React.Dispatch<React.SetStateAction<Note>>;
+  setDisplayedNote: React.Dispatch<React.SetStateAction<Note>>;
 }
 
 interface NoteListProps {
   searchResults: Note[];
   allNotes: Note[];
-  setCurrentNote: React.Dispatch<React.SetStateAction<Note>>;
+  setDisplayedNote: React.Dispatch<React.SetStateAction<Note>>;
 }
 
 interface NoteItemProps {
   note: Note;
-  setCurrentNote: React.Dispatch<React.SetStateAction<Note>>;
+  setDisplayedNote: React.Dispatch<React.SetStateAction<Note>>;
 }
 
 interface PadsPanelProps {
   isVisible: boolean;
 }
 
-const NoteItem = ({ note, setCurrentNote }: NoteItemProps) => {
+const NoteItem = ({ note, setDisplayedNote }: NoteItemProps) => {
   return (
     <div
       className="cursor-pointer p-2 flex flex-row  bg-transparent border border-transparent hover:border-bright-green transition-colors duration-100 justify-between items-center rounded-lg"
-      onClick={() => setCurrentNote(note)}
+      onClick={() => {
+        console.log(
+          "NoteItem clicked, setting current note, previous ID: ",
+          note.id
+        );
+        setDisplayedNote(note);
+        console.log("Current note set, new ID: ", note.id);
+      }}
     >
       <div className="p-2">
         <div className="text-sm font-bold">
@@ -54,7 +61,11 @@ const NoteItem = ({ note, setCurrentNote }: NoteItemProps) => {
   );
 };
 
-function NoteList({ searchResults, allNotes, setCurrentNote }: NoteListProps) {
+function NoteList({
+  searchResults,
+  allNotes,
+  setDisplayedNote,
+}: NoteListProps) {
   return (
     <div
       style={{
@@ -76,7 +87,11 @@ function NoteList({ searchResults, allNotes, setCurrentNote }: NoteListProps) {
             )
           : []
         ).map((note: Note, index) => (
-          <NoteItem key={index} note={note} setCurrentNote={setCurrentNote} />
+          <NoteItem
+            key={index}
+            note={note}
+            setDisplayedNote={setDisplayedNote}
+          />
         ))}
       </div>
     </div>
@@ -124,7 +139,7 @@ const PadsPanel = ({
 export default function Sidebar({
   searchResults,
   allNotes,
-  setCurrentNote,
+  setDisplayedNote,
 }: SidebarProps) {
   const [showPadsPanel, setPadsPanel] = useState(false);
   const [isMouseOverPanel, setIsMouseOverPanel] = useState(false);
@@ -154,7 +169,7 @@ export default function Sidebar({
         <NoteList
           searchResults={searchResults}
           allNotes={allNotes}
-          setCurrentNote={setCurrentNote}
+          setDisplayedNote={setDisplayedNote}
         />
         <SessionTimer />
       </div>

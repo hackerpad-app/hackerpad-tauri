@@ -38,7 +38,7 @@ pub fn initialize_db() -> Result<String, String> {
 }
 
 #[command]
-pub fn add_note(headline: String, content: String) -> Result<String, String> {
+pub fn create_note(headline: String, content: String) -> Result<String, String> {
     let db_path: PathBuf = data_dir().unwrap_or_else(|| PathBuf::from(".")).join("com.hackerpad-dev.dev/notes.db");
     let connection = Connection::open(db_path).map_err(|e| e.to_string())?;
     

@@ -7,7 +7,7 @@ export default function useNotes() {
   const [searchResults, setSearchResults] = useState<Note[]>([]);
 
   const [allNotes, setAllNotes] = useState<Note[]>([]);
-  const [currentNote, setCurrentNote] = useState<Note>({
+  const [displayedNote, setDisplayedNote] = useState<Note>({
     id: "",
     created_at: "20.08.1998",
     updated_at: "20.08.2024",
@@ -47,16 +47,16 @@ export default function useNotes() {
       const fetchedNotes = await invoke("get_notes"); // Get Notes from the database
 
       const NotesArray = fetchedNotes as Note[]; // Parse the Notes
-      setCurrentNote(NotesArray[0]); // Set the first Note on display
+      setDisplayedNote(NotesArray[0]); // Set the first Note on display
       setAllNotes(NotesArray); // Put Notes in a state to display in Sidebar
     } catch (error) {
       console.error(error);
     }
   };
 
-  const addNote = async (headline: string, content: string) => {
+  const createNote = async (headline: string, content: string) => {
     try {
-      await invoke("add_note", { headline, content });
+      await invoke("create_note", { headline, content });
       fetchNotes();
     } catch (error) {
       console.error(error);
@@ -66,7 +66,7 @@ export default function useNotes() {
   const removeNote = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault(); // Prevent form submission from reloading the page
     try {
-      const message = await invoke("remove_note", { id: currentNote.id });
+      const message = await invoke("remove_note", { id: displayedNote.id });
       console.log("removeNote message: ", message);
 
       await fetchNotes(); // Refresh Notes after removing
@@ -75,10 +75,10 @@ export default function useNotes() {
     }
   };
 
-  const changeNote = async (headline: string, content: string) => {
+  const updateNote = async (headline: string, content: string) => {
     try {
       await invoke("update_note", {
-        id: currentNote.id,
+        id: displayedNote.id,
         headline,
         content,
       });
@@ -90,16 +90,16 @@ export default function useNotes() {
 
   return {
     fetchNotes,
-    addNote,
+    createNote,
     removeNote,
-    changeNote,
+    updateNote,
     searchQuery,
     setSearchQuery,
     searchResults,
     setSearchResults,
     allNotes,
     setAllNotes,
-    currentNote,
-    setCurrentNote,
+    displayedNote,
+    setDisplayedNote,
   };
 }
