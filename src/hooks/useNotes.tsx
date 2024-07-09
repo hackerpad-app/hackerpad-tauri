@@ -36,7 +36,6 @@ export default function useNotes() {
     }
   };
 
-  // Get all notes from a database, put them to a state and set the first note as displayed
   const fetchNotes = async () => {
     try {
       const fetchedNotes = await invoke("get_notes"); // Get Notes from the database
@@ -45,8 +44,7 @@ export default function useNotes() {
 
       if (NotesArray.length > 0) {
         setDisplayedNote(NotesArray[0]);
-      }
-      else{
+      } else {
         setDisplayedNote(null);
       }
       setAllNotes(NotesArray);

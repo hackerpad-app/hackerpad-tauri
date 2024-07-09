@@ -54,13 +54,13 @@ const NoteItem = ({
       <div className="p-2">
         <div className="text-sm font-bold">
           {note.headline.length > 15
-            ? note.headline.substring(0, 15) + "..."
-            : note.headline}
+            ? note.headline.substring(0, 15).replace(/<[^>]*>/g, "") + "..."
+            : note.headline.replace(/<[^>]*>/g, "")}
         </div>
         <div className="text-sm">
           {note.content.length > 15
-            ? note.content.substring(0, 15) + "..."
-            : note.content}
+            ? note.content.substring(0, 15).replace(/<[^>]*>/g, "") + "..."
+            : note.content.replace(/<[^>]*>/g, "")}
         </div>
       </div>
       <div className="text-xs text-center p-2 text-white opacity-25  self-start  flex-shrink-0">

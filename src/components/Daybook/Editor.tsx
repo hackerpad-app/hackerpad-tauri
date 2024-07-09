@@ -2,6 +2,8 @@ import { useEffect } from "react";
 
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
+import { PiNotePencilLight } from "react-icons/pi";
+import { AiOutlineDelete } from "react-icons/ai";
 
 import Note from "../../types/Note";
 
@@ -40,15 +42,25 @@ const Tools = ({
   };
 
   return (
-    <div className="flex justify-between p-2">
-      <div className="flex">
-        <button onClick={removeNote} className="mr-2">
-          Delete
+    <div className="flex justify-between">
+      <div className="flex ml-2">
+        <button onClick={handleCreateNote} className="mr-3 bg-transparent">
+          <div className="py-4" style={{ fontSize: "25px" }}>
+            <PiNotePencilLight />
+          </div>
         </button>
-        <button onClick={handleCreateNote}>Add</button>
+        <button onClick={removeNote} className="bg-transparent">
+          <div className="py-4" style={{ fontSize: "25px" }}>
+            <AiOutlineDelete />
+          </div>
+        </button>
       </div>
-      <div>
-        <input type="text" placeholder="Search" className="border rounded" />
+      <div className="py-4 mr-5 w-1/4">
+        <input
+          type="text"
+          placeholder="Search"
+          className="border rounded text- h-8 p-2 w-full bg-transparent"
+        />
       </div>
     </div>
   );
