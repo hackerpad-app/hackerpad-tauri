@@ -26,9 +26,11 @@ interface NoteListProps {
 
 interface NoteItemProps {
   note: Note;
+  isSelected: boolean;
   updateNote: (headline: string, content: string) => Promise<void>;
   displayedNote: Note | null;
   setDisplayedNote: React.Dispatch<React.SetStateAction<Note | null>>;
+  handleSelectNote: (note: Note) => void; // Add this line
 }
 
 interface PadsPanelProps {
@@ -39,17 +41,24 @@ const NoteItem = ({
   note,
   updateNote,
   displayedNote,
+  handleSelectNote,
   setDisplayedNote,
+  isSelected,
 }: NoteItemProps) => {
+  const handleClick = async () => {
+    if (displayedNote && displayedNote.id !== note.id) {
+      await updateNote(displayedNote.headline, displayedNote.content);
+    }
+    handleSelectNote(note); // Call this instead of setDisplayedNote
+    setDisplayedNote(note);
+  };
+
   return (
     <div
-      className="cursor-pointer p-2 flex flex-row  bg-transparent border border-transparent hover:border-bright-green transition-colors duration-100 justify-between items-center rounded-lg"
-      onClick={async () => {
-        if (displayedNote) {
-          await updateNote(displayedNote.headline, displayedNote.content);
-        }
-        setDisplayedNote(note);
-      }}
+      className={`cursor-pointer p-2 flex flex-row bg-transparent border ${
+        isSelected ? "border-bright-green" : "border-transparent"
+      } hover:border-bright-green transition-colors duration-100 justify-between items-center rounded-lg`}
+      onClick={handleClick}
     >
       <div className="p-2">
         <div className="text-sm font-bold">
@@ -77,6 +86,13 @@ function NoteList({
   updateNote,
   displayedNote,
 }: NoteListProps) {
+  const [selectedNoteId, setSelectedNoteId] = useState<string | null>(null);
+
+  const handleSelectNote = (note: Note) => {
+    setSelectedNoteId(note.id);
+    setDisplayedNote(note);
+  };
+
   return (
     <div
       style={{
@@ -97,13 +113,15 @@ function NoteList({
                 new Date(a.created_at).getTime()
             )
           : []
-        ).map((note: Note, index) => (
+        ).map((note: Note) => (
           <NoteItem
-            key={index}
+            key={note.id}
             note={note}
+            isSelected={note.id === selectedNoteId}
             updateNote={updateNote}
             displayedNote={displayedNote}
             setDisplayedNote={setDisplayedNote}
+            handleSelectNote={handleSelectNote} // Pass this function
           />
         ))}
       </div>
