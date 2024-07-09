@@ -15,6 +15,7 @@ interface EditorProps {
   createNote: () => Promise<void>;
   removeNote: () => Promise<void>;
   updateNote: (headline: string, content: string) => Promise<void>;
+  setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
 }
 
 interface ToolsProps {
@@ -22,6 +23,7 @@ interface ToolsProps {
   removeNote: () => Promise<void>;
   updateNote: (headline: string, content: string) => Promise<void>;
   displayedNote: Note | null;
+  setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const Tools = ({
@@ -29,6 +31,7 @@ const Tools = ({
   createNote,
   updateNote,
   displayedNote,
+  setSearchQuery,
 }: ToolsProps) => {
   const handleCreateNote = async () => {
     try {
@@ -39,6 +42,10 @@ const Tools = ({
     } catch (error) {
       console.error(error);
     }
+  };
+
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(event.target.value);
   };
 
   return (
@@ -60,6 +67,7 @@ const Tools = ({
           type="text"
           placeholder="Search"
           className="border rounded text- h-8 p-2 w-full bg-transparent"
+          onChange={handleSearchChange}
         />
       </div>
     </div>
@@ -72,6 +80,7 @@ export default function Editor({
   createNote,
   removeNote,
   updateNote,
+  setSearchQuery,
 }: EditorProps) {
   const headlineEditor = useEditor({
     extensions: [StarterKit],
@@ -118,6 +127,7 @@ export default function Editor({
           removeNote={removeNote}
           updateNote={updateNote}
           displayedNote={displayedNote}
+          setSearchQuery={setSearchQuery}
         />
       </div>
       <div className="relative h-1/10 border border-green-900">

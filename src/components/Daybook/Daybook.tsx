@@ -27,6 +27,7 @@ export default function Daybook() {
           setDisplayedNote={setDisplayedNote}
           displayedNote={displayedNote}
           updateNote={updateNote}
+          searchResults={searchResults}
         />
       </div>
       <div className="flex w-4/5 overflow-y-auto bg-dark-green">
@@ -36,6 +37,7 @@ export default function Daybook() {
           createNote={createNote}
           removeNote={removeNote}
           updateNote={updateNote}
+          setSearchQuery={setSearchQuery}
         />
       </div>
     </div>
