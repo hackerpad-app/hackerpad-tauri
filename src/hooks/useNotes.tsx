@@ -63,8 +63,7 @@ export default function useNotes() {
     }
   };
 
-  const removeNote = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault(); // Prevent form submission from reloading the page
+  const removeNote = async () => {
     try {
       const message = await invoke("remove_note", { id: displayedNote.id });
       console.log("removeNote message: ", message);

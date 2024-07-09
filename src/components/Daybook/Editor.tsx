@@ -11,16 +11,16 @@ interface EditorProps {
   displayedNote: Note | null;
   updateNote: (headline: string, content: string) => void;
   createNote: (headline: string, content: string) => void;
-  removeNote: () => void;
+  removeNote: () => Promise<void>;
 }
 
 interface ToolsProps {
-  removeNote: () => void;
   createNote: (headline: string, content: string) => void;
+  removeNote: () => Promise<void>;
 }
 
 const Tools = ({ removeNote, createNote }: ToolsProps) => {
-  const handlecreateNote = () => {
+  const handleCreateNote = () => {
     createNote("", "");
   };
 
@@ -30,7 +30,7 @@ const Tools = ({ removeNote, createNote }: ToolsProps) => {
         <button onClick={removeNote} className="mr-2">
           Delete
         </button>
-        <button onClick={handlecreateNote}>Add</button>
+        <button onClick={handleCreateNote}>Add</button>
       </div>
       <div>
         <input type="text" placeholder="Search" className="border rounded" />
