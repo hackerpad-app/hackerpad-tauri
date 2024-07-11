@@ -41,6 +41,7 @@ export default function useNotes() {
       const fetchedNotes = await invoke("get_notes"); // Get Notes from the database
 
       const NotesArray = fetchedNotes as Note[]; // Parse the Notes
+      console.log("Fetched Notes: ", NotesArray);
 
       if (NotesArray.length > 0) {
         setDisplayedNote(NotesArray[0]);

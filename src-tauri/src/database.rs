@@ -46,7 +46,7 @@ pub fn create_note() -> Result<String, String> {
 
     // Default values for a note is a date in headline and empty content
     let formatted_headline = now.format("%d/%m/%Y").to_string(); // Format the current date as "DD/MM/YYYY"
-    let content = "".to_string();
+    let content = "<h2>🧠 Keep in mind </h2><h2>✅ Today's tasks   </h2><h2>🐥 Standup </h2><h2></h2>".to_string();
 
     let mut statement = connection
         .prepare("INSERT INTO notes (created_at, updated_at, headline, content) VALUES (?, ?, ?, ?)")

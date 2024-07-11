@@ -47,7 +47,6 @@
   padding-top: 1rem;
   padding-left: 1rem;
   width: 100%;
-  box-sizing: border-box;
 }
 
 .prose h1 {
@@ -79,13 +78,6 @@
 .prose:focus-within {
   outline: none;
   border: none;
-}
-
-.headline {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  height: 5rem; /* Adjust based on your font-size and line-height */
 }
 
 ul[data-type="taskList"] {

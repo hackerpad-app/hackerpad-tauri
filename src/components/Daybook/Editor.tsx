@@ -67,7 +67,7 @@ const Tools = ({
           </div>
         </button>
       </div>
-      <div className="py-4 mr-5 w-1/4">
+      <div className="py-4 w-1/4">
         <input
           type="text"
           placeholder="Search"
@@ -146,7 +146,7 @@ export default function Editor({
   }, [headlineEditor, editor, displayedNote]);
 
   return (
-    <div className="bg-dark-green relative h-screen w-full">
+    <div className="bg-dark-green relative h-screen w-full pr-5">
       <div className="relative ">
         <Tools
           createNote={createNote}
@@ -156,10 +156,26 @@ export default function Editor({
           setSearchQuery={setSearchQuery}
         />
       </div>
-      <div className="headline relative border border-green-900">
-        <EditorContent editor={headlineEditor} />
+      <div className="flex pb-3 items-center justify-between border border-green-900 rounded-lg">
+        <div className="-nowrap relative">
+          <EditorContent editor={headlineEditor} />
+        </div>
+        <div className="mr-5">
+          {displayedNote?.updated_at
+            ? new Date(displayedNote.updated_at).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+              })
+            : ""}
+        </div>{" "}
       </div>
-      <div className="h-full w-full border border-green-900 overflow-y-auto">
+      <div
+        className="h-3/4 w-full"
+        style={{ minHeight: "75%", height: "auto" }}
+      >
         <EditorContent editor={editor} />
         <Confetti active={confetti} />
       </div>

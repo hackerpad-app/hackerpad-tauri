@@ -15,7 +15,7 @@ export default function Daybook() {
   } = useNotes();
 
   return (
-    <div className="flex flex-row h-full">
+    <div className="flex flex-row">
       <div className="flex w-1/5 h-full overflow-hidden">
         <Sidebar
           searchResults={searchResults}
@@ -25,7 +25,7 @@ export default function Daybook() {
           updateNote={updateNote}
         />
       </div>
-      <div className="flex w-4/5 overflow-y-auto bg-dark-green">
+      <div className="w-4/5 h-full overflow-y-auto bg-dark-green">
         <Editor
           displayedNote={displayedNote}
           setDisplayedNote={setDisplayedNote}
