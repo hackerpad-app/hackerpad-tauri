@@ -48,7 +48,7 @@ export default function useNotes() {
       } else {
         setDisplayedNote({
           id: "temp-id",
-          headline: "Welcome to hackerpad :)",
+          headline: "👋 🌎 ",
           content: "",
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
