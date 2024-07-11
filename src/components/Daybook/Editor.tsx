@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Highlight from "@tiptap/extension-highlight";
 import Typography from "@tiptap/extension-typography";
 import { EditorContent, useEditor } from "@tiptap/react";
@@ -90,6 +90,8 @@ export default function Editor({
   const [confetti, setConfetti] = useState(false);
   const [checkedCount, setCheckedCount] = useState(0);
 
+  const editorRef = useRef<ReturnType<typeof useEditor> | null>(null);
+
   const headlineEditor = useEditor({
     extensions: [StarterKit, Highlight, Typography],
     content: "",
@@ -133,15 +135,22 @@ export default function Editor({
     },
   });
 
+  editorRef.current = editor;
+
   useEffect(() => {
-    if (displayedNote) {
+    if (displayedNote && headlineEditor && editor) {
       let wrappedHeadline = `<h1>${displayedNote.headline}</h1>`;
-      headlineEditor?.commands.setContent(wrappedHeadline, false, {
-        preserveWhitespace: true,
-      });
-      editor?.commands.setContent(displayedNote.content, false, {
-        preserveWhitespace: true,
-      });
+      if (headlineEditor.getHTML() !== wrappedHeadline) {
+        headlineEditor.commands.setContent(wrappedHeadline, false, {
+          preserveWhitespace: true,
+        });
+      }
+
+      if (editor.getHTML() !== displayedNote.content) {
+        editor.commands.setContent(displayedNote.content, false, {
+          preserveWhitespace: true,
+        });
+      }
     }
   }, [headlineEditor, editor, displayedNote]);
 
