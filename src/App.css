@@ -40,22 +40,61 @@
   }
 }
 
-@layer base {
-  p,
-  h1,
-  h2,
-  h3,
-  h4,
-  input,
-  label,
-  li,
-  th,
-  td,
-  a,
-  code,
-  strong,
-  li::before,
-  figcaption {
-    color: rgb(255, 255, 255) !important;
-  }
+/*  scrollbar styles *
+/*Control color of TipTap's Editors; otherise it's midnight blue for some reason*/
+
+.prose {
+  padding-top: 1rem;
+  padding-left: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.prose h1 {
+  color: #ffffff;
+  font-size: 32px;
+}
+
+.prose h2 {
+  color: #ffffff;
+  font-size: 24px;
+}
+
+.prose h3 {
+  color: #ffffff;
+  font-size: 18px;
+}
+
+.prose h4 {
+  color: #ffffff;
+  font-size: 12px;
+}
+
+.prose p {
+  color: #ffffff;
+  line-height: 1.5;
+}
+
+.prose:focus,
+.prose:focus-within {
+  outline: none;
+  border: none;
+}
+
+.headline {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  height: 5rem; /* Adjust based on your font-size and line-height */
+}
+
+ul[data-type="taskList"] {
+  list-style-type: none;
+}
+
+/* Display text next to the todo and add margin on left*/
+ul[data-type="taskList"] > li > input,
+ul[data-type="taskList"] > li > div {
+  display: inline-block;
+  margin-left: 10px;
 }
