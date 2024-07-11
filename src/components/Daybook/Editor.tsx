@@ -1,5 +1,6 @@
 import { useEffect } from "react";
-
+import Highlight from "@tiptap/extension-highlight";
+import Typography from "@tiptap/extension-typography";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { PiNotePencilLight } from "react-icons/pi";
@@ -83,8 +84,13 @@ export default function Editor({
   setSearchQuery,
 }: EditorProps) {
   const headlineEditor = useEditor({
-    extensions: [StarterKit],
+    extensions: [StarterKit, Highlight, Typography],
     content: "",
+    editorProps: {
+      attributes: {
+        class: "prose",
+      },
+    },
     onUpdate: () => {
       let newHeadline = headlineEditor?.getHTML();
       if (newHeadline !== undefined && displayedNote) {
@@ -96,8 +102,13 @@ export default function Editor({
   });
 
   const editor = useEditor({
-    extensions: [StarterKit],
+    extensions: [StarterKit, Highlight, Typography],
     content: ``,
+    editorProps: {
+      attributes: {
+        class: "prose",
+      },
+    },
     onUpdate: () => {
       let newContent = editor?.getHTML();
       if (newContent !== undefined && displayedNote) {

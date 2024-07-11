@@ -39,3 +39,23 @@
     background-color: #0f0f0f69;
   }
 }
+
+@layer base {
+  p,
+  h1,
+  h2,
+  h3,
+  h4,
+  input,
+  label,
+  li,
+  th,
+  td,
+  a,
+  code,
+  strong,
+  li::before,
+  figcaption {
+    color: rgb(255, 255, 255) !important;
+  }
+}
