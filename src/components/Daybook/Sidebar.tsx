@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 
-import Note from "./../../types/Note";
-import SessionTimer from "./Pomodoro";
-
 import { CiSettings } from "react-icons/ci";
 import { PiBrainThin } from "react-icons/pi";
 import { PiCalendarCheckThin } from "react-icons/pi";
 import { PiBugBeetleThin } from "react-icons/pi";
+
+import Note from "./../../types/Note";
+import SessionTimer from "./SessionTimer";
 
 interface SidebarProps {
   searchResults: Note[];

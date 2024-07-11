@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+
 import { VscDebugStart } from "react-icons/vsc";
 import { VscDebugStop } from "react-icons/vsc";
 
@@ -10,12 +11,12 @@ export const config = {
 const SessionTimer = () => {
   const [minutes, setMinutes] = useState(config.session_time);
   const [seconds, setSeconds] = useState(0);
-  const [isRunning, setIsRunning] = useState(false);
+  //const [isRunning, setIsRunning] = useState(false);
   const intervalRef = useRef<number | null>(null);
 
   const startTimer = () => {
     if (intervalRef.current !== null) return; // if timer is already running, do nothing
-    setIsRunning(true);
+    //setIsRunning(true);
     intervalRef.current = setInterval(() => {
       setSeconds((prevSeconds) => {
         if (prevSeconds === 0) {
@@ -33,11 +34,11 @@ const SessionTimer = () => {
           return prevSeconds - 1;
         }
       });
-    }, 1000);
+    }, 1000) as unknown as number; // Type assertion here
   };
 
   const stopTimer = () => {
-    setIsRunning(false);
+    //setIsRunning(false);
     if (intervalRef.current === null) return; // if timer is not running, do nothing
     clearInterval(intervalRef.current);
     intervalRef.current = null;
