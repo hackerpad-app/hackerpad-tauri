@@ -104,6 +104,10 @@ export default function Editor({
       let newHeadline = headlineEditor?.getHTML();
       if (newHeadline !== undefined && displayedNote) {
         let cleanedHeadline = newHeadline.replace(/<[^>]*>/g, "");
+        if (cleanedHeadline.length > 45) {
+          cleanedHeadline = cleanedHeadline.substring(0, 25);
+          headlineEditor?.commands.setContent(`<h1>${cleanedHeadline}</h1>`);
+        }
         const newNote = { ...displayedNote, headline: cleanedHeadline };
         setDisplayedNote(newNote);
       }
