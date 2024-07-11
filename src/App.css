@@ -80,13 +80,22 @@
   border: none;
 }
 
-ul[data-type="taskList"] {
-  list-style-type: none;
+/*Tasks CSS */
+
+ul[data-type="taskList"] ul {
+  padding-left: 0px; /* How much to move with each nested list*/
 }
 
-/* Display text next to the todo and add margin on left*/
+ul[data-type="taskList"] {
+  list-style-type: none; /* Remove dots before todos */
+  padding-left: 0px; /* Remove default padding to align nested lists properly */
+}
+
 ul[data-type="taskList"] > li > input,
-ul[data-type="taskList"] > li > div {
-  display: inline-block;
-  margin-left: 10px;
+ul[data-type="taskList"] > li > div,
+ul[data-type="taskList"] li input,
+ul[data-type="taskList"] li div {
+  display: inline-grid; /*Inline grid works but need to add padding   padding: 5px;  */
+  grid-template-rows: 15px 1fr; /* 10px regulates space between two task items*/
+  margin-left: 5px; /*Space between box and text*/
 }

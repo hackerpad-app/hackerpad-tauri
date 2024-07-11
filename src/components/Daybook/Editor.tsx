@@ -111,11 +111,19 @@ export default function Editor({
   });
 
   const editor = useEditor({
-    extensions: [StarterKit, TaskList, TaskItem, Highlight, Typography],
+    extensions: [
+      StarterKit,
+      Highlight,
+      Typography,
+      TaskItem.configure({
+        nested: true,
+      }),
+      TaskList,
+    ],
     content: ``,
     editorProps: {
       attributes: {
-        class: "prose max-w-none h-1/2 w-full",
+        class: "prose max-w-none h-1/2 w-full tiptap",
       },
     },
     onUpdate: () => {
