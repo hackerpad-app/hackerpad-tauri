@@ -1,17 +1,14 @@
 import { useEffect, useState, useRef } from "react";
-
 import Highlight from "@tiptap/extension-highlight";
 import Typography from "@tiptap/extension-typography";
 import StarterKit from "@tiptap/starter-kit";
 import { EditorContent, useEditor } from "@tiptap/react";
 import TaskList from "@tiptap/extension-task-list";
-import TaskItem from "@tiptap/extension-task-item";
-
+import CustomTaskItem from "./custom/taskItem";
+import Strike from "@tiptap/extension-strike";
 import Confetti from "react-dom-confetti";
-
 import Tools from "./EditorTools";
 import Note from "../../types/Note";
-
 import "./../../App.css";
 
 interface EditorProps {
@@ -34,7 +31,7 @@ export default function Editor({
   const [confetti, setConfetti] = useState(false);
   const [checkedCount, setCheckedCount] = useState(0);
 
-  const editorRef = useRef<ReturnType<typeof useEditor> | null>(null);
+  //const editorRef = useRef<ReturnType<typeof useEditor> | null>(null);
 
   const headlineEditor = useEditor({
     extensions: [StarterKit, Highlight, Typography],
@@ -45,7 +42,7 @@ export default function Editor({
       },
     },
     onUpdate: () => {
-      let newHeadline = headlineEditor?.getHTML();
+      const newHeadline = headlineEditor?.getHTML();
       if (newHeadline !== undefined && displayedNote) {
         let cleanedHeadline = newHeadline.replace(/<[^>]*>/g, "");
         if (cleanedHeadline.length > 45) {
@@ -63,7 +60,8 @@ export default function Editor({
       StarterKit,
       Highlight,
       Typography,
-      TaskItem.configure({
+      Strike,
+      CustomTaskItem.configure({
         nested: true,
       }),
       TaskList,
@@ -71,17 +69,18 @@ export default function Editor({
     content: ``,
     editorProps: {
       attributes: {
-        class: "prose max-w-none h-1/2 w-full tiptap",
+        class: "prose max-w-none h-1/2 w-full tiptap ",
       },
     },
     onUpdate: () => {
-      let newContent = editor?.getHTML();
+      const newContent = editor?.getHTML();
       if (newContent !== undefined && displayedNote) {
         const newNote = { ...displayedNote, content: newContent };
         setDisplayedNote(newNote);
-        let newCheckedCount = (
-          newContent.match(/<input type="checkbox" checked="checked">/g) || []
-        ).length;
+
+        // Handle strike-through logic and confetti
+        const newCheckedCount = (newContent.match(/data-checked="true"/g) || [])
+          .length;
         if (newCheckedCount > checkedCount) {
           setConfetti(true);
           setTimeout(() => setConfetti(false), 100);
@@ -91,11 +90,11 @@ export default function Editor({
     },
   });
 
-  editorRef.current = editor;
+  //editorRef.current = editor;
 
   useEffect(() => {
     if (displayedNote && headlineEditor && editor) {
-      let wrappedHeadline = `<h1>${displayedNote.headline}</h1>`;
+      const wrappedHeadline = `<h1>${displayedNote.headline}</h1>`;
       if (headlineEditor.getHTML() !== wrappedHeadline) {
         headlineEditor.commands.setContent(wrappedHeadline, false, {
           preserveWhitespace: true,

@@ -96,6 +96,7 @@ ul[data-type="taskList"] > li > div,
 ul[data-type="taskList"] li input,
 ul[data-type="taskList"] li div {
   display: inline-grid; /*Inline grid works but need to add padding   padding: 5px;  */
+  justify-content: end;
   grid-template-rows: 15px 1fr; /* 10px regulates space between two task items*/
   margin-left: 5px; /*Space between box and text*/
 }
