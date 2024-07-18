@@ -13,11 +13,12 @@ pub struct Note {
     updated_at: chrono::DateTime<chrono::Utc>,
     headline: String,
     content: String,
+    pad: String,
 }
 
 
 #[command]
-pub fn initialize_db() -> Result<String, String> {
+pub fn initialize_db_notes() -> Result<String, String> {
     let db_path: PathBuf = data_dir().unwrap_or_else(|| PathBuf::from(".")).join("com.hackerpad-dev.dev/notes.db");
     let connection = Connection::open(db_path).map_err(|e| e.to_string())?;
 
@@ -29,7 +30,8 @@ pub fn initialize_db() -> Result<String, String> {
                 created_at DATE NOT NULL,
                 updated_at DATE NOT NULL,
                 headline TEXT NOT NULL,
-                content TEXT NOT NULL
+                content TEXT NOT NULL,
+                pad TEXT NOT NULL
             );
             ",
         )
@@ -38,23 +40,27 @@ pub fn initialize_db() -> Result<String, String> {
 }
 
 #[command]
-pub fn create_note() -> Result<String, String> {
+pub fn create_note(headline: Option<String>, content: Option<String>, pad: Option<String>) -> Result<String, String> {
     let db_path: PathBuf = data_dir().unwrap_or_else(|| PathBuf::from(".")).join("com.hackerpad-dev.dev/notes.db");
+    println!("Database path: {:?}", db_path);
+
     let connection = Connection::open(db_path).map_err(|e| e.to_string())?;
     
     let now: DateTime<Local> = Local::now();
 
-    // Default values for a note is a date in headline and empty content
-    let formatted_headline = now.format("%d/%m/%Y").to_string(); // Format the current date as "DD/MM/YYYY"
-    let content = "<h2>🧠 Keep in mind </h2><h2>✅ Today's tasks   </h2><h2>🐥 Standup </h2><h2></h2>".to_string();
-
+    // Use provided values or default ones were None (for Daybook)
+    let formatted_headline = headline.unwrap_or_else(|| now.format("%d/%m/%Y").to_string());
+    let content = content.unwrap_or_else(|| "<h2>🧠 Keep in mind </h2><h2>✅ Today's tasks   </h2><h2>🐥 Standup </h2><h2></h2>".to_string());
+    let pad = pad.unwrap_or_else(|| "daybook".to_string());
+    
     let mut statement = connection
-        .prepare("INSERT INTO notes (created_at, updated_at, headline, content) VALUES (?, ?, ?, ?)")
+        .prepare("INSERT INTO notes (created_at, updated_at, headline, content, pad) VALUES (?, ?, ?, ?, ?)")
         .map_err(|e| e.to_string())?;
     statement.bind(1, now.to_rfc3339().as_str()).map_err(|e| e.to_string())?;
     statement.bind(2, now.to_rfc3339().as_str()).map_err(|e| e.to_string())?;
-    statement.bind(3, formatted_headline.as_str()).map_err(|e| e.to_string())?; // Clone the string
+    statement.bind(3, formatted_headline.as_str()).map_err(|e| e.to_string())?;
     statement.bind(4, content.as_str()).map_err(|e| e.to_string())?;
+    statement.bind(5, pad.as_str()).map_err(|e| e.to_string())?;
 
     statement.next().map_err(|e| e.to_string())?;
     Ok("Note added successfully.".to_string())
@@ -62,14 +68,20 @@ pub fn create_note() -> Result<String, String> {
 
 
 #[command]
-pub fn get_notes() -> Result<Vec<Note>, String> {
+pub fn get_notes(pad: Option<String>) -> Result<Vec<Note>, String> {
     let db_path: PathBuf = data_dir().unwrap_or_else(|| PathBuf::from(".")).join("com.hackerpad-dev.dev/notes.db");
     let connection = Connection::open(db_path).map_err(|e| e.to_string())?;
 
-    let mut statement = connection
-        .prepare("SELECT id, created_at, updated_at, headline, content FROM notes ORDER BY created_at DESC")
-        .map_err(|e| e.to_string())?;
-    
+    let sql_query = match pad {
+        Some(ref _pad_value) => "SELECT id, created_at, updated_at, headline, content, pad FROM notes WHERE pad = ? ORDER BY created_at DESC",
+        None => "SELECT id, created_at, updated_at, headline, content, pad FROM notes ORDER BY created_at DESC",
+    };
+
+    let mut statement = connection.prepare(sql_query).map_err(|e| e.to_string())?;
+
+    if let Some(pad_value) = pad {
+        statement.bind(1, &*pad_value).map_err(|e| e.to_string())?;    }
+
     let mut notes = Vec::new();
     while let State::Row = statement.next().map_err(|e| e.to_string())? {
         let id = statement.read::<i64>(0).map_err(|e| e.to_string())?;
@@ -79,9 +91,10 @@ pub fn get_notes() -> Result<Vec<Note>, String> {
 
         let headline = statement.read::<String>(3).map_err(|e| e.to_string())?;
         let content = statement.read::<String>(4).map_err(|e| e.to_string())?;
+        let pad = statement.read::<String>(5).map_err(|e| e.to_string())?;
 
-        notes.push(Note { id, headline, content, created_at, updated_at });
-    }
+        notes.push(Note { id, headline, content, created_at, updated_at, pad });   
+     }
     Ok(notes)
 }
 
@@ -117,19 +130,23 @@ pub fn update_note(id: i64, headline: String, content: String) -> Result<String,
     statement.next().map_err(|e| e.to_string())?;
     Ok("Note changed successfully.".to_string())
 }
+
 #[command]
-pub fn search_notes(search: String) -> Result<Vec<Note>, String> {
+pub fn search_notes(search: String, pad: Option<String>) -> Result<Vec<Note>, String> {
     let db_path: PathBuf = data_dir().unwrap_or_else(|| PathBuf::from(".")).join("com.hackerpad-dev.dev/notes.db");
     let connection = Connection::open(db_path).map_err(|e| e.to_string())?;
 
+    // Use the provided pad or default to "daybook"
+    let pad_value = pad.unwrap_or_else(|| "daybook".to_string());
+
     let mut statement = connection
-        .prepare("SELECT id, created_at, updated_at, headline, content FROM notes WHERE headline LIKE ? OR content LIKE ?")
+        .prepare("SELECT id, created_at, updated_at, headline, content, pad FROM notes WHERE (headline LIKE ? OR content LIKE ?) AND pad = ?")
         .map_err(|e| e.to_string())?;
     
-    // Bind the search parameter to the SQL query
     let search_pattern = format!("%{}%", search);
     statement.bind(1, search_pattern.as_str()).map_err(|e| e.to_string())?;
     statement.bind(2, search_pattern.as_str()).map_err(|e| e.to_string())?;
+    statement.bind(3, pad_value.as_str()).map_err(|e| e.to_string())?;
 
     let mut notes = Vec::new();
     while let State::Row = statement.next().map_err(|e| e.to_string())? {
@@ -140,8 +157,9 @@ pub fn search_notes(search: String) -> Result<Vec<Note>, String> {
         
         let headline = statement.read::<String>(3).map_err(|e| e.to_string())?;
         let content = statement.read::<String>(4).map_err(|e| e.to_string())?;
-        
-        notes.push(Note { id, headline, content, created_at, updated_at });
+        let pad = statement.read::<String>(5).map_err(|e| e.to_string())?;
+
+        notes.push(Note { id, headline, content, created_at, updated_at, pad });
     }
     Ok(notes)
 }

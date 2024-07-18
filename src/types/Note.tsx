@@ -4,6 +4,7 @@ interface Note {
   updated_at: string;
   headline: string;
   content: string;
+  pad: string;
 }
 
 export default Note;

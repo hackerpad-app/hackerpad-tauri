@@ -1,26 +1,32 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
+
+import { EditorContent, useEditor } from "@tiptap/react";
+
 import Highlight from "@tiptap/extension-highlight";
 import Typography from "@tiptap/extension-typography";
 import StarterKit from "@tiptap/starter-kit";
-import { EditorContent, useEditor } from "@tiptap/react";
 import TaskList from "@tiptap/extension-task-list";
 import CustomTaskItem from "./custom/taskItem";
 import Strike from "@tiptap/extension-strike";
 import Confetti from "react-dom-confetti";
+
 import Tools from "./EditorTools";
 import Note from "../../types/Note";
-import "./../../App.css";
+
+//import "./../../../App.css";
 
 interface EditorProps {
+  pad: string;
   displayedNote: Note | null;
   setDisplayedNote: React.Dispatch<React.SetStateAction<Note | null>>;
-  createNote: () => Promise<void>;
-  removeNote: () => Promise<void>;
-  updateNote: (headline: string, content: string) => Promise<void>;
+  createNote: (pad: string) => Promise<void>;
+  removeNote: (pad: string) => Promise<void>;
+  updateNote: (pad: string, headline: string, content: string) => Promise<void>;
   setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export default function Editor({
+  pad,
   displayedNote,
   setDisplayedNote,
   createNote,
@@ -113,6 +119,7 @@ export default function Editor({
     <div className="bg-dark-green relative h-screen w-full pr-5">
       <div className="relative ">
         <Tools
+          pad={pad}
           createNote={createNote}
           removeNote={removeNote}
           updateNote={updateNote}

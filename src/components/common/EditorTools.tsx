@@ -4,14 +4,16 @@ import { AiOutlineDelete } from "react-icons/ai";
 import Note from "../../types/Note";
 
 interface ToolsProps {
-  createNote: () => Promise<void>;
-  removeNote: () => Promise<void>;
-  updateNote: (headline: string, content: string) => Promise<void>;
+  pad: string;
+  createNote: (pad: string) => Promise<void>;
+  removeNote: (pad: string) => Promise<void>;
+  updateNote: (pad: string, headline: string, content: string) => Promise<void>;
   displayedNote: Note | null;
   setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const Tools = ({
+  pad,
   removeNote,
   createNote,
   updateNote,
@@ -20,9 +22,9 @@ const Tools = ({
 }: ToolsProps) => {
   const handleCreateNote = async () => {
     try {
-      await createNote();
+      await createNote(pad);
       if (displayedNote) {
-        await updateNote(displayedNote.headline, displayedNote.content);
+        await updateNote(pad, displayedNote.headline, displayedNote.content);
       }
     } catch (error) {
       console.error(error);
@@ -41,7 +43,7 @@ const Tools = ({
             <PiNotePencilLight />
           </div>
         </button>
-        <button onClick={removeNote} className="bg-transparent">
+        <button onClick={() => removeNote(pad)} className="bg-transparent">
           <div className="py-4 text-bright-green" style={{ fontSize: "2rem" }}>
             <AiOutlineDelete />
           </div>
