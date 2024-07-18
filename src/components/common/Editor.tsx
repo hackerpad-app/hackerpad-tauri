@@ -13,8 +13,6 @@ import Confetti from "react-dom-confetti";
 import Tools from "./EditorTools";
 import Note from "../../types/Note";
 
-//import "./../../../App.css";
-
 interface EditorProps {
   pad: string;
   displayedNote: Note | null;

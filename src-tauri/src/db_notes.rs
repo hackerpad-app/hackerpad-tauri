@@ -40,16 +40,18 @@ pub fn initialize_db_notes() -> Result<String, String> {
 }
 
 #[command]
-pub fn create_note(headline: Option<String>, content: Option<String>, pad: Option<String>) -> Result<String, String> {
+pub fn create_note(pad: Option<String>, headline: Option<String>, content: Option<String>) -> Result<String, String> {
     let db_path: PathBuf = data_dir().unwrap_or_else(|| PathBuf::from(".")).join("com.hackerpad-dev.dev/notes.db");
-    println!("Database path: {:?}", db_path);
-
     let connection = Connection::open(db_path).map_err(|e| e.to_string())?;
     
     let now: DateTime<Local> = Local::now();
 
-    // Use provided values or default ones were None (for Daybook)
-    let formatted_headline = headline.unwrap_or_else(|| now.format("%d/%m/%Y").to_string());
+    let formatted_headline = if pad == Some("daybook".to_string()) {
+        now.format("%d/%m/%Y").to_string()
+    } else {
+        headline.expect("Headline required when 'pad' is not 'daybook'.")
+    };
+
     let content = content.unwrap_or_else(|| "<h2>🧠 Keep in mind </h2><h2>✅ Today's tasks   </h2><h2>🐥 Standup </h2><h2></h2>".to_string());
     let pad = pad.unwrap_or_else(|| "daybook".to_string());
     

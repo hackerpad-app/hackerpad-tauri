@@ -81,9 +81,9 @@ export default function useNotes() {
     }
   };
 
-  const createNote = async (pad: string) => {
+  const createNote = async (pad: string, headline: string = "") => {
     try {
-      await invoke("create_note", { pad: pad });
+      await invoke("create_note", { pad: pad, headline: headline });
       await fetchNotes(pad);
     } catch (error) {
       console.error(error);
