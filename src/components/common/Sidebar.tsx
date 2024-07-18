@@ -111,6 +111,12 @@ function NoteList({
       }}
       className="h-4/5 bg-transparent rounded-lg"
     >
+      <div
+        className="flex justify-center font-bold"
+        style={{ letterSpacing: "0.15em" }}
+      >
+        {pad.charAt(0).toUpperCase() + pad.slice(1).toLowerCase()}
+      </div>{" "}
       <div className="flex-none  h-full items-cente bg-transparent hover:border-dark-green">
         {(searchResults?.length > 0
           ? searchResults
