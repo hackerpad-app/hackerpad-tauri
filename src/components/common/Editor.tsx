@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { EditorContent, useEditor } from "@tiptap/react";
+import { EditorContent, useEditor, BubbleMenu } from "@tiptap/react";
 
 import Highlight from "@tiptap/extension-highlight";
 import Typography from "@tiptap/extension-typography";
@@ -36,7 +36,6 @@ export default function Editor({
   const [checkedCount, setCheckedCount] = useState(0);
 
   //const editorRef = useRef<ReturnType<typeof useEditor> | null>(null);
-
   const headlineEditor = useEditor({
     extensions: [StarterKit, Highlight, Typography],
     content: "",
@@ -145,6 +144,28 @@ export default function Editor({
         className="h-3/4 w-full"
         style={{ minHeight: "75%", height: "auto" }}
       >
+        {editor && (
+          <BubbleMenu editor={editor}>
+            <button
+              onClick={() => editor.chain().focus().toggleBold().run()}
+              className={editor.isActive("bold") ? "is-active" : ""}
+            >
+              Bold
+            </button>
+            <button
+              onClick={() => editor.chain().focus().toggleItalic().run()}
+              className={editor.isActive("italic") ? "is-active" : ""}
+            >
+              Italic
+            </button>
+            <button
+              onClick={() => editor.chain().focus().toggleStrike().run()}
+              className={editor.isActive("strike") ? "is-active" : ""}
+            >
+              Strike
+            </button>
+          </BubbleMenu>
+        )}
         <EditorContent editor={editor} />
         <Confetti active={confetti} />
       </div>

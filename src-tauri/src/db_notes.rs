@@ -52,7 +52,17 @@ pub fn create_note(pad: Option<String>, headline: Option<String>, content: Optio
         headline.expect("Headline required when 'pad' is not 'daybook'.")
     };
 
-    let content = content.unwrap_or_else(|| "<h2>🧠 Keep in mind </h2><h2>✅ Today's tasks   </h2><h2>🐥 Standup </h2><h2></h2>".to_string());
+    let content = content.unwrap_or_else(|| {
+        if pad.as_deref() == Some("daybook") {
+            "<h2>🧠 Keep in mind</h2><h2>✅Today's tasks</h2><h2>🐥 Standup</h2>".to_string()
+        } else if pad.as_deref() == Some("issues")  {
+            "<h2>🧠 Keep in mind</h2><h2>📝Problem description</h2><h2>✅Tasks</h2>".to_string()
+        }
+        else {
+            "".to_string()
+        }
+    });
+
     let pad = pad.unwrap_or_else(|| "daybook".to_string());
     
     let mut statement = connection
