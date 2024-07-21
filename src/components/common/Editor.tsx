@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { EditorContent, useEditor, BubbleMenu } from "@tiptap/react";
+import { EditorContent, useEditor } from "@tiptap/react";
 
 import Highlight from "@tiptap/extension-highlight";
 import Typography from "@tiptap/extension-typography";
@@ -11,6 +11,7 @@ import Strike from "@tiptap/extension-strike";
 import Confetti from "react-dom-confetti";
 
 import Tools from "./EditorTools";
+import HighlightMenu from "./HighlightMenu";
 import Note from "../../types/Note";
 
 interface EditorProps {
@@ -144,16 +145,9 @@ export default function Editor({
         className="h-3/4 w-full"
         style={{ minHeight: "75%", height: "auto" }}
       >
-        {editor && (
-          <BubbleMenu editor={editor}>
-            <button
-              onClick={() => editor.chain().focus().toggleBold().run()}
-              className={editor.isActive("bold") ? "is-active" : ""}
-            >
-              Bold
-            </button>
-          </BubbleMenu>
-        )}
+        {editor && pad === "daybook" && (
+          <HighlightMenu editor={editor}></HighlightMenu>
+        )}{" "}
         <EditorContent editor={editor} />
         <Confetti active={confetti} />
       </div>

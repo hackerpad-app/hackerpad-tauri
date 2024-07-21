@@ -17,7 +17,6 @@ export default function useNotes(pad: string) {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<Note[]>([]);
 
-  console.log("useNotes hook initialized with pad: ", pad);
   useEffect(() => {
     invoke("initialize_db_notes")
       .then((message) => console.log(message))

@@ -144,21 +144,32 @@ pub fn update_note(id: i64, headline: String, content: String) -> Result<String,
 }
 
 #[command]
-pub fn search_notes(search: String, pad: String) -> Result<Vec<Note>, String> {
+pub fn search_notes(search: String, pad: String, search_by_headline: Option<bool>) -> Result<Vec<Note>, String> {
     let db_path: PathBuf = data_dir().unwrap_or_else(|| PathBuf::from(".")).join("com.hackerpad-dev.dev/notes.db");
     let connection = Connection::open(db_path).map_err(|e| e.to_string())?;
 
-    // Use the provided pad or default to "daybook"
     let pad_value = pad;
 
-    let mut statement = connection
-        .prepare("SELECT id, created_at, updated_at, headline, content, pad FROM notes WHERE (headline LIKE ? OR content LIKE ?) AND pad = ?")
-        .map_err(|e| e.to_string())?;
-    
+    let query = match search_by_headline {
+        Some(true) => "SELECT id, created_at, updated_at, headline, content, pad FROM notes WHERE headline LIKE ? AND pad = ?",
+        _ => "SELECT id, created_at, updated_at, headline, content, pad FROM notes WHERE (headline LIKE ? OR content LIKE ?) AND pad = ?",
+    };
+
+    let mut statement = connection.prepare(query).map_err(|e| e.to_string())?;
+
     let search_pattern = format!("%{}%", search);
-    statement.bind(1, search_pattern.as_str()).map_err(|e| e.to_string())?;
-    statement.bind(2, search_pattern.as_str()).map_err(|e| e.to_string())?;
-    statement.bind(3, pad_value.as_str()).map_err(|e| e.to_string())?;
+
+    match search_by_headline {
+        Some(true) => {
+            statement.bind(1, search_pattern.as_str()).map_err(|e| e.to_string())?;
+            statement.bind(2, pad_value.as_str()).map_err(|e| e.to_string())?;
+        },
+        _ => {
+            statement.bind(1, search_pattern.as_str()).map_err(|e| e.to_string())?;
+            statement.bind(2, search_pattern.as_str()).map_err(|e| e.to_string())?;
+            statement.bind(3, pad_value.as_str()).map_err(|e| e.to_string())?;
+        },
+    }
 
     let mut notes = Vec::new();
     while let State::Row = statement.next().map_err(|e| e.to_string())? {
