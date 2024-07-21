@@ -3,7 +3,7 @@ import { invoke } from "@tauri-apps/api/tauri";
 
 import Note from "./../types/Note";
 
-export default function useNotes() {
+export default function useNotes(pad: string) {
   const [allNotesDaybook, setAllNotesDaybook] = useState<Note[]>([]);
   const [allNotesIssues, setAllNotesIssues] = useState<Note[]>([]);
 
@@ -17,6 +17,7 @@ export default function useNotes() {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<Note[]>([]);
 
+  console.log("useNotes hook initialized with pad: ", pad);
   useEffect(() => {
     invoke("initialize_db_notes")
       .then((message) => console.log(message))
@@ -27,17 +28,25 @@ export default function useNotes() {
 
   useEffect(() => {
     if (searchQuery.length > 0) {
-      searchNotes(searchQuery);
+      searchNotes(searchQuery, pad);
     } else {
-      setSearchResults([]); // Clear search results when query is deleted
+      setSearchResults([]);
     }
-  }, [searchQuery]);
+  }, [searchQuery, pad]);
 
-  const searchNotes = async (query: string) => {
+  const searchNotes = async (query: string, pad: string) => {
     try {
-      console.log("Searching notes with query: ", searchQuery);
+      console.log(
+        "Searching notes with query: ",
+        searchQuery,
+        " in pad: ",
+        pad
+      );
 
-      const searchedNotes = await invoke("search_notes", { search: query });
+      const searchedNotes = await invoke("search_notes", {
+        search: query,
+        pad: pad,
+      });
       const NotesArray = searchedNotes as Note[];
       setSearchResults(NotesArray);
     } catch (error) {

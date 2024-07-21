@@ -152,18 +152,6 @@ export default function Editor({
             >
               Bold
             </button>
-            <button
-              onClick={() => editor.chain().focus().toggleItalic().run()}
-              className={editor.isActive("italic") ? "is-active" : ""}
-            >
-              Italic
-            </button>
-            <button
-              onClick={() => editor.chain().focus().toggleStrike().run()}
-              className={editor.isActive("strike") ? "is-active" : ""}
-            >
-              Strike
-            </button>
           </BubbleMenu>
         )}
         <EditorContent editor={editor} />

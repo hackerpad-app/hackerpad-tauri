@@ -28,7 +28,6 @@ const Tools = ({
       setIsModalVisible(true);
     } else {
       try {
-        console.log("no headline");
         await createNote(pad);
         if (displayedNote) {
           await updateNote(pad, displayedNote.headline, displayedNote.content);
@@ -36,12 +35,11 @@ const Tools = ({
       } catch (error) {
         console.error(error);
       }
-    }p
+    }
   };
 
   const handleModalSubmit = async () => {
     try {
-      console.log("headline");
       await createNote(pad, headlineInput);
       setIsModalVisible(false); // Close the modal after submission
     } catch (error) {
@@ -50,6 +48,7 @@ const Tools = ({
   };
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    console.log("search set with", event.target.value);
     setSearchQuery(event.target.value);
   };
 

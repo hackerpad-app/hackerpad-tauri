@@ -17,7 +17,7 @@ export default function Issues({ pad, setPad }: IssuesProps) {
     allNotesIssues,
     displayedNoteIssues,
     setDisplayedNoteIssues,
-  } = useNotes();
+  } = useNotes(pad);
 
   return (
     <div className="flex flex-row">

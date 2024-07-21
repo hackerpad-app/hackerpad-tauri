@@ -17,7 +17,7 @@ export default function Daybook({ pad, setPad }: DaybookProps) {
     allNotesDaybook,
     displayedNoteDaybook,
     setDisplayedNoteDaybook,
-  } = useNotes();
+  } = useNotes(pad);
 
   return (
     <div className="flex flex-row">

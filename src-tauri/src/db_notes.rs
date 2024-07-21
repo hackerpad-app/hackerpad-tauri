@@ -59,7 +59,7 @@ pub fn create_note(pad: Option<String>, headline: Option<String>, content: Optio
             "<h2>🧠 Keep in mind</h2><h2>📝Problem description</h2><h2>✅Tasks</h2>".to_string()
         }
         else {
-            "".to_string()
+            "<h2>🧠 Keep in mind</h2><h2>📝Problem description</h2><h2>✅Tasks</h2>".to_string()
         }
     });
 
@@ -144,12 +144,12 @@ pub fn update_note(id: i64, headline: String, content: String) -> Result<String,
 }
 
 #[command]
-pub fn search_notes(search: String, pad: Option<String>) -> Result<Vec<Note>, String> {
+pub fn search_notes(search: String, pad: String) -> Result<Vec<Note>, String> {
     let db_path: PathBuf = data_dir().unwrap_or_else(|| PathBuf::from(".")).join("com.hackerpad-dev.dev/notes.db");
     let connection = Connection::open(db_path).map_err(|e| e.to_string())?;
 
     // Use the provided pad or default to "daybook"
-    let pad_value = pad.unwrap_or_else(|| "daybook".to_string());
+    let pad_value = pad;
 
     let mut statement = connection
         .prepare("SELECT id, created_at, updated_at, headline, content, pad FROM notes WHERE (headline LIKE ? OR content LIKE ?) AND pad = ?")
