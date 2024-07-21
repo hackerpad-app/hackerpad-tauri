@@ -38,7 +38,11 @@ export default function Editor({
 
   //const editorRef = useRef<ReturnType<typeof useEditor> | null>(null);
   const headlineEditor = useEditor({
-    extensions: [StarterKit, Highlight, Typography],
+    extensions: [
+      StarterKit,
+      Highlight.configure({ multicolor: true }),
+      Typography,
+    ],
     content: "",
     editorProps: {
       attributes: {
@@ -62,7 +66,7 @@ export default function Editor({
   const editor = useEditor({
     extensions: [
       StarterKit,
-      Highlight,
+      Highlight.configure({ multicolor: true }),
       Typography,
       Strike,
       CustomTaskItem.configure({
