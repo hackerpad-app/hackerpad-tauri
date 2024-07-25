@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useCallback, useState } from "react";
+import React, { useEffect, useRef, useCallback } from "react";
 import { invoke } from "@tauri-apps/api/tauri";
 import { VscDebugStart, VscDebugStop } from "react-icons/vsc";
 import { GrPowerReset } from "react-icons/gr";
@@ -38,10 +38,9 @@ const SessionTimer: React.FC<SessionTimerProps> = ({
     const timeString = `${minutes.toString().padStart(2, "0")}:${seconds
       .toString()
       .padStart(2, "0")}`;
-    console.log("Updating time in tray:", timeString);
-    invoke("update_tray_time_command", { time: timeString })
-      .then(() => console.log("Time updated in tray:", timeString))
-      .catch((error) => console.error("Failed to update time in tray:", error));
+    invoke("update_tray_time_command", { time: timeString }).catch((error) =>
+      console.error("Failed to update time in tray:", error)
+    );
   }, []);
 
   const startTimer = useCallback(() => {
