@@ -217,10 +217,19 @@ export default function Sidebar({
 }: SidebarProps) {
   const [showPadsPanel, setPadsPanel] = useState(false);
   const [isMouseOverPanel, setIsMouseOverPanel] = useState(false);
-  const [showStartSessionModal, setStartSessionShowModal] = useState(false);
+
+  const [showNewSessionModal, setStartSessionShowModal] = useState(false);
   const [newTask, setNewTask] = useState("");
-  const { tasks, setTasks, setIsSessionActive, setSessionInProgress } =
-    useTimer();
+
+  const {
+    tasks,
+    setTasks,
+    sessionActive,
+    sessionInProgress,
+    setSessionActive,
+    setSessionInProgress,
+    setTime,
+  } = useTimer();
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -234,7 +243,11 @@ export default function Sidebar({
     };
   }, [isMouseOverPanel]);
 
-  const handleRequestStart = () => {
+  // Handling Modal buttons
+  const handleNewSessionStart = () => {
+    console.log("handleNewSessionStart");
+    console.log("sessionActive", sessionActive);
+    console.log("sessionInProgress", sessionInProgress);
     setStartSessionShowModal(true);
   };
 
@@ -245,20 +258,44 @@ export default function Sidebar({
     }
   };
 
-  const handleStartSession = () => {
-    console.log("Session starting");
+  const handleStartSessionModal = () => {
+    console.log("handleStartSessionModal");
+    console.log("sessionActive", sessionActive);
+    console.log("sessionInProgress", sessionInProgress);
+
     setStartSessionShowModal(false);
-    setIsSessionActive(true);
+
+    //
+    setSessionActive(true);
+    setSessionInProgress(true);
   };
 
+  // Handling Sidebar buttons
   const handleStopSession = () => {
-    console.log("Session stopping");
+    console.log("handleStopSession");
+    console.log("sessionActive", sessionActive);
+    console.log("sessionInProgress", sessionInProgress);
+
     setSessionInProgress(false);
   };
 
   const handleContinueSession = () => {
-    console.log("Session continuing");
-    setIsSessionActive(true);
+    console.log("handleContinueSession");
+    console.log("sessionActive", sessionActive);
+    console.log("sessionInProgress", sessionInProgress);
+    setSessionActive(true);
+  };
+
+  const handleResetSession = () => {
+    // Reset all Timer states
+    console.log("handleResetSession");
+    console.log("sessionActive", sessionActive);
+    console.log("sessionInProgress", sessionInProgress);
+
+    setSessionInProgress(false);
+    setSessionActive(false);
+    setTasks([]);
+    setTime({ minutes: 50, seconds: 0 });
   };
 
   return (
@@ -282,12 +319,13 @@ export default function Sidebar({
           setDisplayedNote={setDisplayedNote}
         />
         <SessionTimer
-          onRequestStart={handleRequestStart}
+          onRequestStart={handleNewSessionStart}
           onRequestStop={handleStopSession}
           onRequestContinue={handleContinueSession}
+          onRequestReset={handleResetSession}
         />
       </div>
-      {showStartSessionModal && (
+      {showNewSessionModal && (
         <div className="fixed inset-0 flex items-center justify-center z-50">
           <div className="absolute inset-0 bg-black opacity-50"></div>
           <div className="bg-transparent p-8 rounded-lg shadow-lg z-10 max-w-md w-full">
@@ -320,7 +358,7 @@ export default function Sidebar({
               ))}
             </ul>
             <button
-              onClick={handleStartSession}
+              onClick={handleStartSessionModal}
               className="bg-gray-500 text-white w-full py-3 rounded hover:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-green-400"
             >
               Start Session

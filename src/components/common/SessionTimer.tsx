@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useCallback, useState } from "react";
 import { invoke } from "@tauri-apps/api/tauri";
 import { VscDebugStart, VscDebugStop } from "react-icons/vsc";
+import { GrPowerReset } from "react-icons/gr";
+
 import { useTimer } from "./../context/TimeContext";
 
 export const config = {
@@ -12,17 +14,18 @@ interface SessionTimerProps {
   onRequestStart: () => void;
   onRequestStop: () => void;
   onRequestContinue: () => void;
+  onRequestReset: () => void;
 }
 
 const SessionTimer: React.FC<SessionTimerProps> = ({
   onRequestStart,
   onRequestStop,
   onRequestContinue,
+  onRequestReset,
 }) => {
-  const { time, setTime, isSessionActive, setIsSessionActive, tasks } =
-    useTimer();
+  const { time, setTime, sessionActive, setSessionActive, tasks } = useTimer();
   const intervalRef = useRef<number | null>(null);
-  const [isSessionInProgress, setIsSessionInProgress] = useState(false);
+  const [sessionInProgress, setSessionInProgress] = useState(false);
 
   const updateTrayTime = useCallback((minutes: number, seconds: number) => {
     const timeString = `${minutes.toString().padStart(2, "0")}:${seconds
@@ -34,31 +37,52 @@ const SessionTimer: React.FC<SessionTimerProps> = ({
       .catch((error) => console.error("Failed to update time in tray:", error));
   }, []);
 
+  // this could be simplified; just use isSessionInProgress as condition; no elif
   const startTimer = useCallback(() => {
-    if (isSessionInProgress) {
-      console.log("1st condition");
+    console.log("startTimer; ", sessionInProgress);
+    if (sessionInProgress) {
+      console.log("1st condition; continue already started session");
       onRequestContinue();
-      setIsSessionInProgress(true);
-    } else if (!isSessionActive) {
-      console.log("2nd condition");
+    } else {
+      console.log("2nd condition; start a brand new session");
       onRequestStart();
-      setIsSessionInProgress(true);
     }
-  }, [isSessionActive, onRequestStart]);
+    setSessionInProgress(true);
+  }, [sessionActive, onRequestStart]);
 
   const stopTimer = useCallback(() => {
-    if (isSessionActive) {
+    console.log("stopTimer");
+    console.log("sessionActive", sessionActive);
+    console.log("sessionInProgress", sessionInProgress);
+
+    if (sessionActive) {
       if (intervalRef.current !== null) {
         clearInterval(intervalRef.current);
         intervalRef.current = null;
       }
-      setIsSessionActive(false);
       onRequestStop();
+      setSessionActive(false);
     }
-  }, [isSessionActive, onRequestStop, setIsSessionActive]);
+  }, [sessionActive, onRequestStop, setSessionActive]);
+
+  const resetTimer = useCallback(() => {
+    console.log("resetTimer");
+    console.log("sessionActive", sessionActive);
+    console.log("sessionInProgress", sessionInProgress);
+
+    if (sessionActive || sessionInProgress) {
+      if (intervalRef.current !== null) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+      onRequestReset();
+      setSessionActive(false);
+      setSessionInProgress(false);
+    }
+  }, [sessionActive, onRequestReset, setSessionActive, setSessionInProgress]);
 
   useEffect(() => {
-    if (!isSessionActive) return;
+    if (!sessionActive) return;
 
     const tick = () => {
       setTime((prevTime) => {
@@ -90,7 +114,7 @@ const SessionTimer: React.FC<SessionTimerProps> = ({
         intervalRef.current = null;
       }
     };
-  }, [isSessionActive, updateTrayTime, setTime]);
+  }, [sessionActive, updateTrayTime, setTime]);
 
   const timerMinutes = time.minutes.toString().padStart(2, "0");
   const timerSeconds = time.seconds.toString().padStart(2, "0");
@@ -104,9 +128,9 @@ const SessionTimer: React.FC<SessionTimerProps> = ({
           borderStyle: "solid",
           zIndex: 0,
         }}
-        className="p-5 mt-5 space-x-12 flex flex-row items-center justify-center rounded-md"
+        className="p-5 mt-5 space-x-5 flex flex-row items-center justify-center rounded-md"
       >
-        <div className="flex justify-center space-x-4 p-59">
+        <div className="flex justify-center space-x-3 p-59">
           <VscDebugStart
             className="hover:text-bright-green cursor-pointer"
             onClick={startTimer}
@@ -117,6 +141,11 @@ const SessionTimer: React.FC<SessionTimerProps> = ({
             onClick={stopTimer}
             style={{ fontSize: "24px" }}
           />
+          <GrPowerReset
+            className="hover:text-bright-green cursor-pointer"
+            onClick={resetTimer}
+            style={{ fontSize: "24px" }}
+          />
         </div>
         <div className="flex items-center justify-center text-4xl text-center h-full">
           <p>
@@ -125,7 +154,7 @@ const SessionTimer: React.FC<SessionTimerProps> = ({
         </div>
       </div>
 
-      {isSessionInProgress && tasks.length > 0 && (
+      {sessionInProgress && tasks.length > 0 && (
         <div
           style={{
             position: "fixed",

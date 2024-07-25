@@ -5,8 +5,8 @@ interface TimerContextType {
   setTime: React.Dispatch<
     React.SetStateAction<{ minutes: number; seconds: number }>
   >;
-  isSessionActive: boolean;
-  setIsSessionActive: React.Dispatch<React.SetStateAction<boolean>>;
+  sessionActive: boolean;
+  setSessionActive: React.Dispatch<React.SetStateAction<boolean>>;
   tasks: string[];
   setTasks: React.Dispatch<React.SetStateAction<string[]>>;
   sessionInProgress: boolean;
@@ -19,8 +19,9 @@ export const TimerProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [time, setTime] = useState({ minutes: 50, seconds: 0 });
-  const [isSessionActive, setIsSessionActive] = useState(false);
   const [tasks, setTasks] = useState<string[]>([]);
+
+  const [sessionActive, setSessionActive] = useState(false);
   const [sessionInProgress, setSessionInProgress] = useState(false);
 
   return (
@@ -28,8 +29,8 @@ export const TimerProvider: React.FC<{ children: ReactNode }> = ({
       value={{
         time,
         setTime,
-        isSessionActive,
-        setIsSessionActive,
+        sessionActive,
+        setSessionActive,
         sessionInProgress,
         setSessionInProgress,
         tasks,
