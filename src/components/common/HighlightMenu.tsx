@@ -72,16 +72,16 @@ const HighlightMenu: React.FC<HighlightMenuProps> = ({ editor }) => {
   const addHighlightWithPrefix = (color: string) => {
     let colorName;
     switch (color) {
-      case "#8ce99a":
+      case "#2b8a3e":
         colorName = "<5min";
         break;
-      case "#74c0fc":
+      case "#1864ab":
         colorName = "15-30m";
         break;
-      case "#ffff00":
+      case "#f59f00":
         colorName = "1-2h";
         break;
-      case "#ff6b6b":
+      case "#f50000":
         colorName = "2-4h";
         break;
       default:
@@ -100,7 +100,9 @@ const HighlightMenu: React.FC<HighlightMenuProps> = ({ editor }) => {
           tr.addMark(
             from,
             from + prefixText.length - 1, // Subtract 1 to exclude the space after the bracket
-            editor.schema.marks.highlight.create({ color, class: "highlight" })
+            editor.schema.marks.highlight.create({
+              color,
+            })
           );
         }
         return true;
@@ -145,26 +147,26 @@ const HighlightMenu: React.FC<HighlightMenuProps> = ({ editor }) => {
         {isEstimateOpen && (
           <div className="mt-2 space-y-1">
             <button
-              onClick={() => addHighlightWithPrefix("#8ce99a")}
-              className="px-2 py-1 w-full text-left rounded text-gray-300 hover:bg-green-400 hover:text-black transition duration-300 ease-in-out"
+              onClick={() => addHighlightWithPrefix("#2b8a3e")}
+              className="px-2 py-1 w-full text-left rounded text-gray-300 hover:bg-green-700 hover:text-white transition duration-300 ease-in-out"
             >
               <div>&lt;5min.</div>{" "}
             </button>
             <button
-              onClick={() => addHighlightWithPrefix("#74c0fc")}
-              className="px-2 py-1 w-full text-left rounded text-gray-300 hover:bg-blue-400 hover:text-black transition duration-300 ease-in-out"
+              onClick={() => addHighlightWithPrefix("#1864ab")}
+              className="px-2 py-1 w-full text-left rounded text-gray-300 hover:bg-blue-700 hover:text-white transition duration-300 ease-in-out"
             >
               15-30m.
             </button>
             <button
-              onClick={() => addHighlightWithPrefix("#ffff000")}
-              className="px-2 py-1 w-full text-left rounded text-gray-300 hover:bg-yellow-400 hover:text-black transition duration-300 ease-in-out"
+              onClick={() => addHighlightWithPrefix("#f59f00")}
+              className="px-2 py-1 w-full text-left rounded text-gray-300 hover:bg-yellow-600 hover:text-white transition duration-300 ease-in-out"
             >
               1-2h
             </button>
             <button
-              onClick={() => addHighlightWithPrefix("#ff6b6b")}
-              className="px-2 py-1 w-full text-left rounded text-gray-300 hover:bg-red-400 hover:text-black transition duration-300 ease-in-out"
+              onClick={() => addHighlightWithPrefix("#f50000")}
+              className="px-2 py-1 w-full text-left rounded text-gray-300 hover:bg-red-700 hover:text-white transition duration-300 ease-in-out"
             >
               2-4h
             </button>
