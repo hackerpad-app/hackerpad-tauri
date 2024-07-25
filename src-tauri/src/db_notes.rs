@@ -54,12 +54,12 @@ pub fn create_note(pad: Option<String>, headline: Option<String>, content: Optio
 
     let content = content.unwrap_or_else(|| {
         if pad.as_deref() == Some("daybook") {
-            "<h2>🧠 Keep in mind</h2><h2>✅Today's tasks</h2><h2>🐥 Standup</h2>".to_string()
+            "<h2>🧠 Keep in mind</h2><h2>✅Today's tasks</h2><h2>🐥 Standup</h2><hr><p>".to_string()
         } else if pad.as_deref() == Some("issues")  {
-            "<h2>🧠 Keep in mind</h2><h2>📝Problem description</h2><h2>✅Tasks</h2>".to_string()
+            "<h2>🧠 Keep in mind</h2><h2>📝Problem description</h2><h2>✅Tasks</h2><hr><p>".to_string()
         }
         else {
-            "<h2>🧠 Keep in mind</h2><h2>📝Problem description</h2><h2>✅Tasks</h2>".to_string()
+            "<h2>🧠 Keep in mind</h2><h2>📝Problem description</h2><h2>✅Tasks</h2><hr><p>".to_string()
         }
     });
 
