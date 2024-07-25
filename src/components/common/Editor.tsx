@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { EditorContent, useEditor } from "@tiptap/react";
 
@@ -36,7 +36,20 @@ export default function Editor({
   const [confetti, setConfetti] = useState(false);
   const [checkedCount, setCheckedCount] = useState(0);
 
-  //const editorRef = useRef<ReturnType<typeof useEditor> | null>(null);
+  const saveNote = useCallback(() => {
+    if (displayedNote && displayedNote.headline && displayedNote.content) {
+      updateNote(pad, displayedNote.headline, displayedNote.content);
+    }
+  }, [displayedNote, updateNote, pad]);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      saveNote();
+    }, 500);
+
+    return () => clearInterval(intervalId);
+  }, [saveNote]);
+
   const headlineEditor = useEditor({
     extensions: [
       StarterKit,
@@ -97,8 +110,6 @@ export default function Editor({
       }
     },
   });
-
-  //editorRef.current = editor;
 
   useEffect(() => {
     if (displayedNote && headlineEditor && editor) {
