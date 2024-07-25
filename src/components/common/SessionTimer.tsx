@@ -177,7 +177,7 @@ const SessionTimer: React.FC<SessionTimerProps> = ({
           }}
         >
           <h3 className="font-bold mb-2">Session Goals:</h3>
-          <ul>
+          <ul className="list-disc pl-5">
             {tasks.map((task, index) => (
               <li key={index}>{task}</li>
             ))}
