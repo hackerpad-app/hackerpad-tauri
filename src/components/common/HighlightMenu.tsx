@@ -42,13 +42,21 @@ const HighlightMenu: React.FC<HighlightMenuProps> = ({ editor }) => {
 
   const handleHeadlineClick = async (note: Note) => {
     if (!editor.state.selection.empty) {
-      const highlightedText = editor.state.doc.textBetween(
-        editor.state.selection.from,
-        editor.state.selection.to,
-        ""
-      );
+      const { from, to } = editor.state.selection;
+      const highlightedText = editor.state.doc.textBetween(from, to, "");
 
-      let newContent = `${note.content.trimEnd()}<br>${highlightedText}`;
+      const issueTag = ` [${note.headline}]`;
+
+      editor
+        .chain()
+        .focus()
+        .insertContentAt(to, issueTag)
+        .setTextSelection({ from, to: to + issueTag.length })
+        .run();
+
+      editor.commands.setMark("highlight", { color: "#2d2d1f" });
+
+      let newContent = `${note.content.trimEnd()}<br>${highlightedText}${issueTag}`;
 
       try {
         await invoke("update_note", {
