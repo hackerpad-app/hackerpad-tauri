@@ -23,9 +23,16 @@ const SessionTimer: React.FC<SessionTimerProps> = ({
   onRequestContinue,
   onRequestReset,
 }) => {
-  const { time, setTime, sessionActive, setSessionActive, tasks } = useTimer();
+  const {
+    time,
+    setTime,
+    sessionActive,
+    setSessionActive,
+    sessionInProgress,
+    setSessionInProgress,
+    tasks,
+  } = useTimer();
   const intervalRef = useRef<number | null>(null);
-  const [sessionInProgress, setSessionInProgress] = useState(false);
 
   const updateTrayTime = useCallback((minutes: number, seconds: number) => {
     const timeString = `${minutes.toString().padStart(2, "0")}:${seconds
@@ -37,7 +44,6 @@ const SessionTimer: React.FC<SessionTimerProps> = ({
       .catch((error) => console.error("Failed to update time in tray:", error));
   }, []);
 
-  // this could be simplified; just use isSessionInProgress as condition; no elif
   const startTimer = useCallback(() => {
     console.log("startTimer; ", sessionInProgress);
     if (sessionInProgress) {
