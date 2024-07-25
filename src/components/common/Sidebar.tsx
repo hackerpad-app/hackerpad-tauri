@@ -195,12 +195,12 @@ const PadsPanel = ({
         >
           <PiBugBeetleThin />
         </div>
-        <div
+        {/* <div
           className="py-4"
           style={{ fontSize: "30px" }} // Settings icon style remains constant
         >
           <CiSettings />
-        </div>
+        </div> */}
       </div>
     </div>
   );
