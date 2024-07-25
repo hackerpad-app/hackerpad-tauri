@@ -1,58 +1,78 @@
-import { useState, useEffect, useRef } from "react";
-
-import { VscDebugStart } from "react-icons/vsc";
-import { VscDebugStop } from "react-icons/vsc";
+import { useState, useEffect, useRef, useCallback } from "react";
+import { invoke } from "@tauri-apps/api/tauri";
+import { VscDebugStart, VscDebugStop } from "react-icons/vsc";
 
 export const config = {
-  session_time: 1,
-  break_time: 1,
+  session_time: 50,
+  break_time: 10,
 };
 
 const SessionTimer = () => {
-  const [minutes, setMinutes] = useState(config.session_time);
-  const [seconds, setSeconds] = useState(0);
-  //const [isRunning, setIsRunning] = useState(false);
+  const [time, setTime] = useState({
+    minutes: config.session_time,
+    seconds: 0,
+  });
+  const [isRunning, setIsRunning] = useState(false);
   const intervalRef = useRef<number | null>(null);
 
-  const startTimer = () => {
-    if (intervalRef.current !== null) return; // if timer is already running, do nothing
-    //setIsRunning(true);
-    intervalRef.current = setInterval(() => {
-      setSeconds((prevSeconds) => {
-        if (prevSeconds === 0) {
-          setMinutes((prevMinutes) => {
-            if (prevMinutes !== 0) {
-              return prevMinutes - 1;
-            } else {
-              const audio = new Audio("/public/completed.mp3");
-              audio.play();
-              return config.session_time; // use config.session_time instead of hard-coded value
-            }
-          });
-          return 59;
-        } else {
-          return prevSeconds - 1;
-        }
-      });
-    }, 1000) as unknown as number; // Type assertion here
-  };
-
-  const stopTimer = () => {
-    //setIsRunning(false);
-    if (intervalRef.current === null) return; // if timer is not running, do nothing
-    clearInterval(intervalRef.current);
-    intervalRef.current = null;
-  };
-
-  useEffect(() => {
-    return () => {
-      // cleanup function to clear interval on component unmount
-      if (intervalRef.current !== null) clearInterval(intervalRef.current);
-    };
+  const updateTrayTime = useCallback((minutes: number, seconds: number) => {
+    const timeString = `${minutes.toString().padStart(2, "0")}:${seconds
+      .toString()
+      .padStart(2, "0")}`;
+    console.log("Updating time in tray:", timeString);
+    invoke("update_tray_time_command", { time: timeString })
+      .then(() => console.log("Time updated in tray:", timeString))
+      .catch((error) => console.error("Failed to update time in tray:", error));
   }, []);
 
-  const timerMinutes = minutes < 10 ? `0${minutes}` : minutes;
-  const timerSeconds = seconds < 10 ? `0${seconds}` : seconds;
+  const startTimer = useCallback(() => {
+    if (isRunning) return;
+    setIsRunning(true);
+    updateTrayTime(time.minutes, time.seconds);
+  }, [isRunning, time, updateTrayTime]);
+
+  const stopTimer = useCallback(() => {
+    if (!isRunning) return;
+    setIsRunning(false);
+  }, [isRunning]);
+
+  useEffect(() => {
+    if (!isRunning) return;
+
+    const tick = () => {
+      setTime((prevTime) => {
+        if (prevTime.seconds === 0) {
+          if (prevTime.minutes === 0) {
+            const audio = new Audio("/completed.mp3");
+            audio.play().catch(console.error);
+            const newTime = { minutes: config.session_time, seconds: 0 };
+            updateTrayTime(newTime.minutes, newTime.seconds);
+            return newTime;
+          } else {
+            const newTime = { minutes: prevTime.minutes - 1, seconds: 59 };
+            updateTrayTime(newTime.minutes, newTime.seconds);
+            return newTime;
+          }
+        } else {
+          const newTime = { ...prevTime, seconds: prevTime.seconds - 1 };
+          updateTrayTime(newTime.minutes, newTime.seconds);
+          return newTime;
+        }
+      });
+    };
+
+    intervalRef.current = window.setInterval(tick, 1000);
+
+    return () => {
+      if (intervalRef.current !== null) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    };
+  }, [isRunning, updateTrayTime]);
+
+  const timerMinutes = time.minutes.toString().padStart(2, "0");
+  const timerSeconds = time.seconds.toString().padStart(2, "0");
 
   return (
     <div
@@ -66,12 +86,12 @@ const SessionTimer = () => {
     >
       <div className="flex justify-center space-x-4 p-59">
         <VscDebugStart
-          className=" hover:text-bright-green cursor-pointer"
+          className="hover:text-bright-green cursor-pointer"
           onClick={startTimer}
-          style={{ fontSize: "24px" }} // Adjust icon size as needed
+          style={{ fontSize: "24px" }}
         />
         <VscDebugStop
-          className=" hover:text-bright-green cursor-pointer"
+          className="hover:text-bright-green cursor-pointer"
           onClick={stopTimer}
           style={{ fontSize: "24px" }}
         />
