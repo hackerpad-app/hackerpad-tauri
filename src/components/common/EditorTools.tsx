@@ -57,19 +57,19 @@ const Tools = ({
       {isModalVisible && (
         <>
           <div className="overlay"></div>
-          <div className="modal">
+          <div className="modal flex justify-between">
             <input
               type="text"
-              placeholder="Enter headline"
+              placeholder="Heeadline"
               value={headlineInput}
               onChange={(e) => setHeadlineInput(e.target.value)}
-              className="border p-2 w-full"
+              className="border p-2"
             />
             <button
               onClick={handleModalSubmit}
-              className="mt-4 bg-blue-500 text-white p-2 rounded"
+              className=" bg-blue-500 text-white p-2 rounded"
             >
-              Submit
+              Create
             </button>
           </div>
         </>
