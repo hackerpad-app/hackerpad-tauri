@@ -4,6 +4,8 @@ import { CiSettings } from "react-icons/ci";
 import { PiCalendarCheckThin } from "react-icons/pi";
 import { PiBugBeetleThin } from "react-icons/pi";
 
+import { useTimer } from "./../context/TimeContext";
+
 import Note from "../../types/Note";
 import SessionTimer from "./SessionTimer";
 
@@ -215,6 +217,10 @@ export default function Sidebar({
 }: SidebarProps) {
   const [showPadsPanel, setPadsPanel] = useState(false);
   const [isMouseOverPanel, setIsMouseOverPanel] = useState(false);
+  const [showStartSessionModal, setStartSessionShowModal] = useState(false);
+  const [newTask, setNewTask] = useState("");
+  const { tasks, setTasks, setIsSessionActive, setSessionInProgress } =
+    useTimer();
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -226,18 +232,45 @@ export default function Sidebar({
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
     };
-  }, [isMouseOverPanel]); // Add isMouseOverPanel as a dependency
+  }, [isMouseOverPanel]);
+
+  const handleRequestStart = () => {
+    setStartSessionShowModal(true);
+  };
+
+  const handleAddTask = () => {
+    if (newTask.trim()) {
+      setTasks([...tasks, newTask.trim()]);
+      setNewTask("");
+    }
+  };
+
+  const handleStartSession = () => {
+    console.log("Session starting");
+    setStartSessionShowModal(false);
+    setIsSessionActive(true);
+  };
+
+  const handleStopSession = () => {
+    console.log("Session stopping");
+    setSessionInProgress(false);
+  };
+
+  const handleContinueSession = () => {
+    console.log("Session continuing");
+    setIsSessionActive(true);
+  };
 
   return (
     <div className="relative w-screen h-screen bg-dark-green">
-      <div className="absolute top-0 left-0  h-full flex justify-start items-start">
+      <div className="absolute top-0 left-0 h-full flex justify-start items-start">
         <PadsPanel
           pad={pad}
           setPad={setPad}
           isVisible={showPadsPanel}
           onMouseEnter={() => setIsMouseOverPanel(true)}
           onMouseLeave={() => setIsMouseOverPanel(false)}
-        />{" "}
+        />
       </div>
       <div className="h-screen flex flex-col bg-dark-green p-5 mt-10">
         <NoteList
@@ -248,8 +281,53 @@ export default function Sidebar({
           displayedNote={displayedNote}
           setDisplayedNote={setDisplayedNote}
         />
-        <SessionTimer />
+        <SessionTimer
+          onRequestStart={handleRequestStart}
+          onRequestStop={handleStopSession}
+          onRequestContinue={handleContinueSession}
+        />
       </div>
+      {showStartSessionModal && (
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+          <div className="absolute inset-0 bg-black opacity-50"></div>
+          <div className="bg-transparent p-8 rounded-lg shadow-lg z-10 max-w-md w-full">
+            <h2 className="text-2xl font-bold mb-6 text-gray-300 text-center">
+              Session Tasks
+            </h2>
+            <div className="flex mb-6">
+              <input
+                type="text"
+                value={newTask}
+                onChange={(e) => setNewTask(e.target.value)}
+                className="flex-grow border border-gray-600 rounded-l px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                placeholder="Enter a task"
+              />
+              <button
+                onClick={handleAddTask}
+                className="bg-gray-500 text-white px-4 py-2 rounded-r hover:bg-slate-500 focus:outline-none focus:ring-2 focus:ring-green-400"
+              >
+                Add
+              </button>
+            </div>
+            <ul className="mb-6 space-y-2">
+              {tasks.map((task, index) => (
+                <li
+                  key={index}
+                  className="bg-slate-900 p-0.5 rounded text-gray-300"
+                >
+                  {task}
+                </li>
+              ))}
+            </ul>
+            <button
+              onClick={handleStartSession}
+              className="bg-gray-500 text-white w-full py-3 rounded hover:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-green-400"
+            >
+              Start Session
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
