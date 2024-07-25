@@ -2,7 +2,7 @@ use sqlite::{Connection, State};
 use tauri::command;
 use serde::{Serialize, Deserialize};
 use chrono::prelude::*;
-use tauri::api::path::data_dir; // Make sure to import data_dir
+use tauri::api::path::data_dir;
 use std::path::PathBuf;
 
 
@@ -54,12 +54,12 @@ pub fn create_note(pad: Option<String>, headline: Option<String>, content: Optio
 
     let content = content.unwrap_or_else(|| {
         if pad.as_deref() == Some("daybook") {
-            "<h2>🧠 Keep in mind</h2><h2>✅Today's tasks</h2><h2>🐥 Standup</h2><hr><p>".to_string()
+            "<h2>🧠 Keep in mind</h2><p><h2>✅ Today's tasks</h2><p><h2>🐥 Standup</h2><p>".to_string()
         } else if pad.as_deref() == Some("issues")  {
-            "<h2>🧠 Keep in mind</h2><h2>📝Problem description</h2><h2>✅Tasks</h2><hr><p>".to_string()
+            "<h2>🧠 Keep in mind</h2><p><h2>📝 Problem description</h2><p><h2>✅ Tasks</h2><p>".to_string()
         }
         else {
-            "<h2>🧠 Keep in mind</h2><h2>📝Problem description</h2><h2>✅Tasks</h2><hr><p>".to_string()
+            "<h2>🧠 Keep in mind</h2><p><h2>📝 Problem description</h2><p><h2>✅ Tasks</h2><p>".to_string()
         }
     });
 
