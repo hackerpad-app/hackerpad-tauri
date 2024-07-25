@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { BubbleMenu } from "@tiptap/react";
 import { invoke } from "@tauri-apps/api/tauri";
 import Note from "./../../types/Note";
-import { Editor, Range } from "@tiptap/core";
+import { Editor } from "@tiptap/core";
 import { Transaction } from "prosemirror-state";
 
 interface HighlightMenuProps {

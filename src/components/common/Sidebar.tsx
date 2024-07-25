@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import { CiSettings } from "react-icons/ci";
+//import { CiSettings } from "react-icons/ci";
 import { PiCalendarCheckThin } from "react-icons/pi";
 import { PiBugBeetleThin } from "react-icons/pi";
 
