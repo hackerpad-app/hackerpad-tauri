@@ -1,5 +1,3 @@
 # Hackerpad
 
-Hackerpad is a scratch pad for distracted software engineers.
-
-hackerpad.info
+[Hackerpad](https://hackerpad.info) is a scratch pad for distracted software engineers.
