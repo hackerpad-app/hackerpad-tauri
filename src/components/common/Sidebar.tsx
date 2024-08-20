@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 import { PiCalendarCheckThin } from "react-icons/pi";
-import { PiBugBeetleThin } from "react-icons/pi";
+import { PiPencilCircleThin } from "react-icons/pi";
 
 import { useTimer } from "./../context/TimeContext";
 
@@ -191,7 +191,7 @@ const PadsPanel = ({
           className="py-4"
           style={getActiveStyle("issues")}
         >
-          <PiBugBeetleThin />
+          <PiPencilCircleThin />
         </div>{" "}
       </div>
     </div>
