@@ -68,7 +68,6 @@ const HighlightMenu: React.FC<HighlightMenuProps> = ({ editor }) => {
 
       editor.commands.setMark("highlight", { color: "#2d2d1f" });
 
-      // Update the other note with highlighted text and only the time tag
       let newContent = `${note.content.trimEnd()}<br>${highlightedText}${dateTimeTag}`;
 
       try {
@@ -153,7 +152,7 @@ const HighlightMenu: React.FC<HighlightMenuProps> = ({ editor }) => {
               isSearchOpen ? "bg-gray-700" : "hover:bg-gray-700"
             }`}
           >
-            Issues
+            Notes
           </button>
           {isSearchOpen && (
             <input
