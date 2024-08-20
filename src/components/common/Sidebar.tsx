@@ -101,6 +101,10 @@ function NoteList({
     setDisplayedNote(note);
   };
 
+  if (pad == "issues") {
+    pad = "notes";
+  } // Quick UI fix that's really bad
+
   return (
     <div
       style={{
