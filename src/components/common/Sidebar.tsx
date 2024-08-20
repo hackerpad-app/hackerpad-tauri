@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 
-//import { CiSettings } from "react-icons/ci";
 import { PiCalendarCheckThin } from "react-icons/pi";
 import { PiBugBeetleThin } from "react-icons/pi";
 
@@ -110,15 +109,15 @@ function NoteList({
         borderStyle: "solid",
         zIndex: 0,
       }}
-      className="h-4/5 bg-transparent rounded-lg"
+      className="h-4/5 bg-transparent rounded-lg flex flex-col"
     >
       <div
-        className="flex justify-center font-bold"
+        className="flex justify-center font-bold p-2"
         style={{ letterSpacing: "0.15em" }}
       >
         {pad.charAt(0).toUpperCase() + pad.slice(1).toLowerCase()}
-      </div>{" "}
-      <div className="flex-none  h-full items-cente bg-transparent hover:border-dark-green">
+      </div>
+      <div className="flex-grow overflow-y-auto custom-scrollbar">
         {(searchResults?.length > 0
           ? searchResults
           : allNotes.length > 0
@@ -137,7 +136,7 @@ function NoteList({
             updateNote={updateNote}
             displayedNote={displayedNote}
             setDisplayedNote={setDisplayedNote}
-            handleSelectNote={handleSelectNote} // Pass this function
+            handleSelectNote={handleSelectNote}
           />
         ))}
       </div>
@@ -194,13 +193,7 @@ const PadsPanel = ({
           style={getActiveStyle("issues")}
         >
           <PiBugBeetleThin />
-        </div>
-        {/* <div
-          className="py-4"
-          style={{ fontSize: "30px" }} // Settings icon style remains constant
-        >
-          <CiSettings />
-        </div> */}
+        </div>{" "}
       </div>
     </div>
   );
