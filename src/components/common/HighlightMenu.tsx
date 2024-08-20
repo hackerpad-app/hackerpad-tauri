@@ -45,8 +45,20 @@ const HighlightMenu: React.FC<HighlightMenuProps> = ({ editor }) => {
       const { from, to } = editor.state.selection;
       const highlightedText = editor.state.doc.textBetween(from, to, "");
 
-      const issueTag = ` [${note.headline}]`;
+      const currentDate = new Date();
+      const dateTimeString = currentDate.toLocaleString('en-GB', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+      });
 
+      const issueTag = ` [${note.headline}]`;
+      const dateTimeTag = ` [${dateTimeString}]`;
+
+      // Update current editor with highlighted text and issue tag
       editor
         .chain()
         .focus()
@@ -56,7 +68,8 @@ const HighlightMenu: React.FC<HighlightMenuProps> = ({ editor }) => {
 
       editor.commands.setMark("highlight", { color: "#2d2d1f" });
 
-      let newContent = `${note.content.trimEnd()}<br>${highlightedText}${issueTag}`;
+      // Update the other note with highlighted text and only the time tag
+      let newContent = `${note.content.trimEnd()}<br>${highlightedText}${dateTimeTag}`;
 
       try {
         await invoke("update_note", {
