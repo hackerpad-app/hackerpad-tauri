@@ -8,4 +8,4 @@ It's lightweight and private.
 
 ### POC
 
-![Hackerpad Demo](hackerpad-demo.gif)
+![Hackerpad Demo](hackerpad-demo.mov)
