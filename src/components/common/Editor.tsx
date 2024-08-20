@@ -62,7 +62,7 @@ export default function Editor({
       saveTimeoutRef.current = setTimeout(() => {
         saveNote();
         saveTimeoutRef.current = null;
-      }, 2000);
+      }, 100);
     }
   }, [isUserEdit, saveNote]);
 
