@@ -140,7 +140,7 @@ const HighlightMenu: React.FC<HighlightMenuProps> = ({ editor }) => {
               isSearchOpen ? "bg-gray-700" : "hover:bg-gray-700"
             }`}
           >
-            Issues
+            Notes
           </button>
           {isSearchOpen && (
             <input

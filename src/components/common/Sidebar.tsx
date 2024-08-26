@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 import { PiCalendarCheckThin } from "react-icons/pi";
-import { PiBugBeetleThin } from "react-icons/pi";
+import { PiPencilCircleThin } from "react-icons/pi";
 
 import { useTimer } from "./../context/TimeContext";
 
@@ -101,6 +101,9 @@ function NoteList({
     setDisplayedNote(note);
   };
 
+  // Quick fix to change the name to notes without messing with backend
+  const displayName = pad === "daybook" ? "Daybook" : "Notes";
+
   return (
     <div
       style={{
@@ -115,7 +118,8 @@ function NoteList({
         className="flex justify-center font-bold p-2"
         style={{ letterSpacing: "0.15em" }}
       >
-        {pad.charAt(0).toUpperCase() + pad.slice(1).toLowerCase()}
+        {displayName.charAt(0).toUpperCase() +
+          displayName.slice(1).toLowerCase()}
       </div>
       <div className="flex-grow overflow-y-auto custom-scrollbar">
         {(searchResults?.length > 0
@@ -192,7 +196,7 @@ const PadsPanel = ({
           className="py-4"
           style={getActiveStyle("issues")}
         >
-          <PiBugBeetleThin />
+          <PiPencilCircleThin />
         </div>{" "}
       </div>
     </div>
