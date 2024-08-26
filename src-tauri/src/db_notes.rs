@@ -56,10 +56,10 @@ pub fn create_note(pad: Option<String>, headline: Option<String>, content: Optio
         if pad.as_deref() == Some("daybook") {
             "<h2>🧠 Keep in mind</h2><p><h2>✅ Today's tasks</h2><p><h2>🐥 Standup</h2><p>".to_string()
         } else if pad.as_deref() == Some("issues")  {
-            "<h2>🧠 Keep in mind</h2><p><h2>📝 Problem description</h2><p><h2>✅ Tasks</h2><p>".to_string()
+            "".to_string()
         }
         else {
-            "<h2>🧠 Keep in mind</h2><p><h2>📝 Problem description</h2><p><h2>✅ Tasks</h2><p>".to_string()
+            "".to_string()
         }
     });
 

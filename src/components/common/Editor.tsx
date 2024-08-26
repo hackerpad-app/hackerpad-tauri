@@ -54,22 +54,6 @@ export default function Editor({
     };
   }, []);
 
-  const triggerSave = useCallback(() => {
-    if (isUserEdit) {
-      if (saveTimeoutRef.current) {
-        clearTimeout(saveTimeoutRef.current);
-      }
-      saveTimeoutRef.current = setTimeout(() => {
-        saveNote();
-        saveTimeoutRef.current = null;
-      }, 100);
-    }
-  }, [isUserEdit, saveNote]);
-
-  useEffect(() => {
-    triggerSave();
-  }, [displayedNote, triggerSave]);
-
   const headlineEditor = useEditor({
     extensions: [
       StarterKit,

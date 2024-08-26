@@ -46,13 +46,13 @@ const HighlightMenu: React.FC<HighlightMenuProps> = ({ editor }) => {
       const highlightedText = editor.state.doc.textBetween(from, to, "");
 
       const currentDate = new Date();
-      const dateTimeString = currentDate.toLocaleString('en-GB', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false
+      const dateTimeString = currentDate.toLocaleString("en-GB", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
       });
 
       const issueTag = ` [${note.headline}]`;

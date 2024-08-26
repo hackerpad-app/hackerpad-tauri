@@ -74,9 +74,11 @@ const NoteItem = ({
             : note.headline.replace(/<[^>]*>/g, "")}
         </div>
       </div>
-      <div className="text-xs text-center p-2 text-white opacity-25  self-start  flex-shrink-0">
-        {new Date(note.created_at).toLocaleDateString()}
-      </div>
+      {pad === "daybook" && (
+        <div className="text-xs text-center p-2 text-white opacity-25 self-start flex-shrink-0">
+          {new Date(note.created_at).toLocaleDateString()}
+        </div>
+      )}
     </div>
   );
 };
@@ -96,9 +98,8 @@ function NoteList({
     setDisplayedNote(note);
   };
 
-  if (pad == "issues") {
-    pad = "notes";
-  } // Quick UI fix that's really bad
+  // Quick fix to change the name to notes without messing with backend
+  const displayName = pad === "daybook" ? "Daybook" : "Notes";
 
   return (
     <div
@@ -114,7 +115,8 @@ function NoteList({
         className="flex justify-center font-bold p-2"
         style={{ letterSpacing: "0.15em" }}
       >
-        {pad.charAt(0).toUpperCase() + pad.slice(1).toLowerCase()}
+        {displayName.charAt(0).toUpperCase() +
+          displayName.slice(1).toLowerCase()}
       </div>
       <div className="flex-grow overflow-y-auto custom-scrollbar">
         {(searchResults?.length > 0
