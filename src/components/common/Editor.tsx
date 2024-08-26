@@ -1,4 +1,4 @@
-import { useCallback, useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState } from "react";
 
 import { EditorContent, useEditor } from "@tiptap/react";
 
@@ -37,12 +37,6 @@ export default function Editor({
   const [checkedCount, setCheckedCount] = useState(0);
 
   const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-
-  useCallback(() => {
-    if (displayedNote && displayedNote.headline && displayedNote.content) {
-      updateNote(pad, displayedNote.headline, displayedNote.content);
-    }
-  }, [displayedNote, updateNote, pad]);
 
   useEffect(() => {
     return () => {
