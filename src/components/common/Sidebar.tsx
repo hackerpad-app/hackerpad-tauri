@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 
 import { PiCalendarCheckThin } from "react-icons/pi";
 import { PiPencilCircleThin } from "react-icons/pi";
+import { PiPencilCircleThin } from "react-icons/pi";
 
 import { useTimer } from "./../context/TimeContext";
 
@@ -68,6 +69,9 @@ const NoteItem = ({
       onClick={handleClick}
     >
       <div className="p-2">
+        <div className="text-xs font-bold">
+          {note.headline.length > 45
+            ? note.headline.substring(0, 45).replace(/<[^>]*>/g, "") + "..."
         <div className="text-xs font-bold">
           {note.headline.length > 45
             ? note.headline.substring(0, 45).replace(/<[^>]*>/g, "") + "..."
@@ -193,6 +197,7 @@ const PadsPanel = ({
           className="py-4"
           style={getActiveStyle("issues")}
         >
+          <PiPencilCircleThin />
           <PiPencilCircleThin />
         </div>{" "}
       </div>

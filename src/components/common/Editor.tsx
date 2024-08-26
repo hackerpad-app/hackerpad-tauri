@@ -112,7 +112,7 @@ export default function Editor({
           .length;
         if (newCheckedCount > checkedCount) {
           setConfetti(true);
-          setTimeout(() => setConfetti(false), 100);
+          setTimeout(() => setConfetti(false), 2000);
         }
         setCheckedCount(newCheckedCount);
       }
