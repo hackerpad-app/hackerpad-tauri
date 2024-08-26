@@ -143,13 +143,16 @@ export default function Editor({
         </div>
         <div className="mr-5">
           {displayedNote?.updated_at
-            ? new Date(displayedNote.updated_at).toLocaleDateString("en-US", {
+            ? `Updated at ${new Date(
+                displayedNote.updated_at
+              ).toLocaleDateString("en-US", {
                 year: "numeric",
                 month: "long",
                 day: "numeric",
                 hour: "2-digit",
                 minute: "2-digit",
-              })
+                second: "2-digit",
+              })}`
             : ""}
         </div>{" "}
       </div>

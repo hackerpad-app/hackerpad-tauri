@@ -68,7 +68,6 @@ export default function useNotes(pad: string) {
     const setAllNotes =
       pad === "daybook" ? setAllNotesDaybook : setAllNotesIssues;
 
-    console.log("handling notes with ", pad);
     if (NotesArray.length > 0) {
       setNote(NotesArray[0]);
     } else {
@@ -81,7 +80,7 @@ export default function useNotes(pad: string) {
     try {
       const fetchedNotes = await invoke("get_notes", { pad });
       const NotesArray = fetchedNotes as Note[];
-      console.log("Fetched Notes: ", NotesArray);
+      //console.log("Fetched Notes: ", NotesArray);
 
       handleNotesArray(pad, NotesArray);
     } catch (error) {

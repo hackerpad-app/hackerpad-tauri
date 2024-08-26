@@ -194,6 +194,7 @@ const PadsPanel = ({
           style={getActiveStyle("issues")}
         >
           <PiPencilCircleThin />
+
         </div>{" "}
       </div>
     </div>

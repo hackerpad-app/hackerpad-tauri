@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { PiNotePencilLight } from "react-icons/pi";
 import { AiOutlineDelete } from "react-icons/ai";
 import Note from "../../types/Note";
@@ -22,6 +22,18 @@ const Tools = ({
 }: ToolsProps) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [headlineInput, setHeadlineInput] = useState("");
+
+  useEffect(() => {
+    const saveInterval = setInterval(() => {
+      if (displayedNote) {
+        updateNote(pad, displayedNote.headline, displayedNote.content).catch(
+          console.error
+        );
+      }
+    }, 5000); // 60000 ms = 60 seconds
+
+    return () => clearInterval(saveInterval);
+  }, [pad, displayedNote, updateNote]);
 
   const handleCreateNote = async () => {
     if (pad === "issues") {
