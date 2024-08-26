@@ -36,13 +36,11 @@ export default function Editor({
   const [confetti, setConfetti] = useState(false);
   const [checkedCount, setCheckedCount] = useState(0);
 
-  const [isUserEdit, setIsUserEdit] = useState(false);
   const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const saveNote = useCallback(() => {
+  useCallback(() => {
     if (displayedNote && displayedNote.headline && displayedNote.content) {
       updateNote(pad, displayedNote.headline, displayedNote.content);
-      setIsUserEdit(false);
     }
   }, [displayedNote, updateNote, pad]);
 
@@ -74,7 +72,6 @@ export default function Editor({
           cleanedHeadline = cleanedHeadline.substring(0, 25);
           headlineEditor?.commands.setContent(`<h1>${cleanedHeadline}</h1>`);
         }
-        setIsUserEdit(true);
 
         const newNote = { ...displayedNote, headline: cleanedHeadline };
         setDisplayedNote(newNote);
@@ -102,8 +99,6 @@ export default function Editor({
     onUpdate: () => {
       const newContent = editor?.getHTML();
       if (newContent !== undefined && displayedNote) {
-        setIsUserEdit(true);
-
         const newNote = { ...displayedNote, content: newContent };
         setDisplayedNote(newNote);
 

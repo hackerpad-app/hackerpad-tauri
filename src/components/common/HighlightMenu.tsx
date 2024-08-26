@@ -57,7 +57,6 @@ const HighlightMenu: React.FC<HighlightMenuProps> = ({ editor }) => {
 
       const issueTag = ` [${note.headline}]`;
       const dateTimeTag = ` [${dateTimeString}]`;
-      const dateTimeTag = ` [${dateTimeString}]`;
 
       // Update current editor with highlighted text and issue tag
       // Update current editor with highlighted text and issue tag
@@ -70,7 +69,6 @@ const HighlightMenu: React.FC<HighlightMenuProps> = ({ editor }) => {
 
       editor.commands.setMark("highlight", { color: "#2d2d1f" });
 
-      let newContent = `${note.content.trimEnd()}<br>${highlightedText}${dateTimeTag}`;
       let newContent = `${note.content.trimEnd()}<br>${highlightedText}${dateTimeTag}`;
 
       try {
@@ -155,8 +153,7 @@ const HighlightMenu: React.FC<HighlightMenuProps> = ({ editor }) => {
               isSearchOpen ? "bg-gray-700" : "hover:bg-gray-700"
             }`}
           >
-            Notes
-            Notes
+            Notes Notes
           </button>
           {isSearchOpen && (
             <input
