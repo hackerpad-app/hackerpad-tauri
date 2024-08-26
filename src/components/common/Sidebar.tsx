@@ -56,7 +56,7 @@ const NoteItem = ({
     if (displayedNote && displayedNote.id !== note.id) {
       await updateNote(pad, displayedNote.headline, displayedNote.content);
     }
-    handleSelectNote(note); // Call this instead of setDisplayedNote
+    handleSelectNote(note);
     setDisplayedNote(note);
   };
 
@@ -193,6 +193,7 @@ const PadsPanel = ({
           className="py-4"
           style={getActiveStyle("issues")}
         >
+          <PiPencilCircleThin />
           <PiPencilCircleThin />
         </div>{" "}
       </div>

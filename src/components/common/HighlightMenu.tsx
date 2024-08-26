@@ -59,6 +59,7 @@ const HighlightMenu: React.FC<HighlightMenuProps> = ({ editor }) => {
       const dateTimeTag = ` [${dateTimeString}]`;
 
       // Update current editor with highlighted text and issue tag
+      // Update current editor with highlighted text and issue tag
       editor
         .chain()
         .focus()
@@ -152,7 +153,7 @@ const HighlightMenu: React.FC<HighlightMenuProps> = ({ editor }) => {
               isSearchOpen ? "bg-gray-700" : "hover:bg-gray-700"
             }`}
           >
-            Notes
+            Notes Notes
           </button>
           {isSearchOpen && (
             <input
