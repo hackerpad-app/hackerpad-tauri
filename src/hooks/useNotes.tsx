@@ -80,8 +80,6 @@ export default function useNotes(pad: string) {
     try {
       const fetchedNotes = await invoke("get_notes", { pad });
       const NotesArray = fetchedNotes as Note[];
-      //console.log("Fetched Notes: ", NotesArray);
-
       handleNotesArray(pad, NotesArray);
     } catch (error) {
       console.error(`Failed to fetch notes for ${pad}:`, error);

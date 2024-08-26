@@ -30,7 +30,7 @@ const Tools = ({
           console.error
         );
       }
-    }, 5000); // 60000 ms = 60 seconds
+    }, 5000);
 
     return () => clearInterval(saveInterval);
   }, [pad, displayedNote, updateNote]);
