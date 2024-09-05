@@ -6,7 +6,7 @@ It's lightweight, local and has markdown support.
 
 Downalod a .dmg file and start playing!
 
-![Screenshot](demoss.png)
+![Screenshot](demo-ss.png)
 
 ### Running the code
 
